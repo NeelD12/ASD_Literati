@@ -71,16 +71,19 @@ export type Database = {
           grade: Database["public"]["Enums"]["grade_level"]
           id: string
           post_id: string
+          section: string
         }
         Insert: {
           grade: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id: string
+          section?: string
         }
         Update: {
           grade?: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id?: string
+          section?: string
         }
         Relationships: [
           {
@@ -97,16 +100,19 @@ export type Database = {
           grade: Database["public"]["Enums"]["grade_level"]
           id: string
           post_id: string
+          section: string
         }
         Insert: {
           grade: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id: string
+          section?: string
         }
         Update: {
           grade?: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id?: string
+          section?: string
         }
         Relationships: [
           {
