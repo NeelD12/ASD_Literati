@@ -14,221 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
-      activities: {
-        Row: {
-          created_at: string
-          description: string
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string
-          id?: string
-          name: string
-        }
-        Update: {
-          created_at?: string
-          description?: string
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
-      anthology_settings: {
-        Row: {
-          academic_year: string
-          accent_color: string
-          closing_text: string
-          created_at: string
-          id: string
-          intro_text: string
-          layout_map: Json
-          logo_url: string | null
-          owner_id: string
-          post_ids: Json
-          subtitle: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          academic_year?: string
-          accent_color?: string
-          closing_text?: string
-          created_at?: string
-          id?: string
-          intro_text?: string
-          layout_map?: Json
-          logo_url?: string | null
-          owner_id: string
-          post_ids?: Json
-          subtitle?: string
-          title?: string
-          updated_at?: string
-        }
-        Update: {
-          academic_year?: string
-          accent_color?: string
-          closing_text?: string
-          created_at?: string
-          id?: string
-          intro_text?: string
-          layout_map?: Json
-          logo_url?: string | null
-          owner_id?: string
-          post_ids?: Json
-          subtitle?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "anthology_settings_owner_id_fkey"
-            columns: ["owner_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      classes: {
-        Row: {
-          created_at: string
-          grade_label: string
-          id: string
-          label: string
-        }
-        Insert: {
-          created_at?: string
-          grade_label: string
-          id?: string
-          label: string
-        }
-        Update: {
-          created_at?: string
-          grade_label?: string
-          id?: string
-          label?: string
-        }
-        Relationships: []
-      }
-      comment_sessions: {
-        Row: {
-          active: boolean
-          class_label: string | null
-          code: string
-          created_at: string
-          created_by: string
-          duration_minutes: number
-          expires_at: string
-          grade_label: string | null
-          id: string
-          post_id: string
-          started_at: string
-        }
-        Insert: {
-          active?: boolean
-          class_label?: string | null
-          code: string
-          created_at?: string
-          created_by: string
-          duration_minutes?: number
-          expires_at: string
-          grade_label?: string | null
-          id?: string
-          post_id: string
-          started_at?: string
-        }
-        Update: {
-          active?: boolean
-          class_label?: string | null
-          code?: string
-          created_at?: string
-          created_by?: string
-          duration_minutes?: number
-          expires_at?: string
-          grade_label?: string | null
-          id?: string
-          post_id?: string
-          started_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comment_sessions_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comment_sessions_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       comments: {
         Row: {
-          author_class: string | null
-          author_grade: string | null
           author_id: string
-          author_login_id: string
           content: string
           created_at: string
           id: string
-          moderated_at: string | null
-          moderated_by: string | null
           parent_id: string | null
           post_id: string
-          session_id: string | null
-          status: Database["public"]["Enums"]["comment_status"]
           updated_at: string
         }
         Insert: {
-          author_class?: string | null
-          author_grade?: string | null
           author_id: string
-          author_login_id?: string
           content: string
           created_at?: string
           id?: string
-          moderated_at?: string | null
-          moderated_by?: string | null
           parent_id?: string | null
           post_id: string
-          session_id?: string | null
-          status?: Database["public"]["Enums"]["comment_status"]
           updated_at?: string
         }
         Update: {
-          author_class?: string | null
-          author_grade?: string | null
           author_id?: string
-          author_login_id?: string
           content?: string
           created_at?: string
           id?: string
-          moderated_at?: string | null
-          moderated_by?: string | null
           parent_id?: string | null
           post_id?: string
-          session_id?: string | null
-          status?: Database["public"]["Enums"]["comment_status"]
           updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "comments_author_id_fkey"
             columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comments_moderated_by_fkey"
-            columns: ["moderated_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -247,50 +64,22 @@ export type Database = {
             referencedRelation: "posts"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "comments_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "comment_sessions"
-            referencedColumns: ["id"]
-          },
         ]
-      }
-      grades: {
-        Row: {
-          id: string
-          label: string
-          sort_order: number
-        }
-        Insert: {
-          id?: string
-          label: string
-          sort_order?: number
-        }
-        Update: {
-          id?: string
-          label?: string
-          sort_order?: number
-        }
-        Relationships: []
       }
       post_comment_permissions: {
         Row: {
-          created_at: string
           grade: Database["public"]["Enums"]["grade_level"]
           id: string
           post_id: string
           section: string
         }
         Insert: {
-          created_at?: string
           grade: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id: string
           section?: string
         }
         Update: {
-          created_at?: string
           grade?: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id?: string
@@ -308,21 +97,18 @@ export type Database = {
       }
       post_view_permissions: {
         Row: {
-          created_at: string
           grade: Database["public"]["Enums"]["grade_level"]
           id: string
           post_id: string
           section: string
         }
         Insert: {
-          created_at?: string
           grade: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id: string
           section?: string
         }
         Update: {
-          created_at?: string
           grade?: Database["public"]["Enums"]["grade_level"]
           id?: string
           post_id?: string
@@ -338,113 +124,47 @@ export type Database = {
           },
         ]
       }
-      post_visibility: {
-        Row: {
-          grade_label: string
-          id: string
-          post_id: string
-        }
-        Insert: {
-          grade_label: string
-          id?: string
-          post_id: string
-        }
-        Update: {
-          grade_label?: string
-          id?: string
-          post_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "post_visibility_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       posts: {
         Row: {
-          academic_year: string
-          activity_id: string | null
           attachments: Json
           author_id: string
-          caption: string
-          class_label: string | null
           comment_cooldown_seconds: number
           content: string
           cover_image: string | null
           created_at: string
-          featured: boolean
-          grade_label: string | null
           id: string
-          image_path: string | null
-          image_url: string | null
-          status: Database["public"]["Enums"]["post_status"]
-          student_names: string
           tags: string[]
           title: string
           updated_at: string
           view_count: number
-          visibility: Database["public"]["Enums"]["view_scope"]
         }
         Insert: {
-          academic_year?: string
-          activity_id?: string | null
           attachments?: Json
           author_id: string
-          caption?: string
-          class_label?: string | null
           comment_cooldown_seconds?: number
           content?: string
           cover_image?: string | null
           created_at?: string
-          featured?: boolean
-          grade_label?: string | null
           id?: string
-          image_path?: string | null
-          image_url?: string | null
-          status?: Database["public"]["Enums"]["post_status"]
-          student_names?: string
           tags?: string[]
           title: string
           updated_at?: string
           view_count?: number
-          visibility?: Database["public"]["Enums"]["view_scope"]
         }
         Update: {
-          academic_year?: string
-          activity_id?: string | null
           attachments?: Json
           author_id?: string
-          caption?: string
-          class_label?: string | null
           comment_cooldown_seconds?: number
           content?: string
           cover_image?: string | null
           created_at?: string
-          featured?: boolean
-          grade_label?: string | null
           id?: string
-          image_path?: string | null
-          image_url?: string | null
-          status?: Database["public"]["Enums"]["post_status"]
-          student_names?: string
           tags?: string[]
           title?: string
           updated_at?: string
           view_count?: number
-          visibility?: Database["public"]["Enums"]["view_scope"]
         }
         Relationships: [
-          {
-            foreignKeyName: "posts_activity_id_fkey"
-            columns: ["activity_id"]
-            isOneToOne: false
-            referencedRelation: "activities"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "posts_author_id_fkey"
             columns: ["author_id"]
@@ -456,67 +176,49 @@ export type Database = {
       }
       profiles: {
         Row: {
-          app_role: Database["public"]["Enums"]["app_role"]
-          class_label: string | null
           created_at: string
           email: string
-          full_name: string | null
           grade: Database["public"]["Enums"]["grade_level"]
-          grade_label: string | null
           id: string
-          login_id: string | null
           role: Database["public"]["Enums"]["user_role"]
           section: string
           username: string
         }
         Insert: {
-          app_role?: Database["public"]["Enums"]["app_role"]
-          class_label?: string | null
           created_at?: string
           email: string
-          full_name?: string | null
           grade?: Database["public"]["Enums"]["grade_level"]
-          grade_label?: string | null
           id: string
-          login_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           section?: string
           username: string
         }
         Update: {
-          app_role?: Database["public"]["Enums"]["app_role"]
-          class_label?: string | null
           created_at?: string
           email?: string
-          full_name?: string | null
           grade?: Database["public"]["Enums"]["grade_level"]
-          grade_label?: string | null
           id?: string
-          login_id?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           section?: string
           username?: string
         }
         Relationships: []
       }
-      staff_registry: {
+      unlock_key_attempts: {
         Row: {
-          created_at: string
-          full_name: string
-          login_id: string
-          role: Database["public"]["Enums"]["app_role"]
+          attempted_at: string
+          id: string
+          user_id: string
         }
         Insert: {
-          created_at?: string
-          full_name: string
-          login_id: string
-          role?: Database["public"]["Enums"]["app_role"]
+          attempted_at?: string
+          id?: string
+          user_id: string
         }
         Update: {
-          created_at?: string
-          full_name?: string
-          login_id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          attempted_at?: string
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -527,18 +229,18 @@ export type Database = {
           created_at: string
           id: string
           key: string
-          max_uses: number
-          target_role: Database["public"]["Enums"]["user_role"]
+          max_uses: number | null
+          target_role: Database["public"]["Enums"]["user_role"] | null
           uses: number
         }
         Insert: {
-          action?: Database["public"]["Enums"]["unlock_action"]
+          action: Database["public"]["Enums"]["unlock_action"]
           active?: boolean
           created_at?: string
           id?: string
           key: string
-          max_uses?: number
-          target_role?: Database["public"]["Enums"]["user_role"]
+          max_uses?: number | null
+          target_role?: Database["public"]["Enums"]["user_role"] | null
           uses?: number
         }
         Update: {
@@ -547,8 +249,8 @@ export type Database = {
           created_at?: string
           id?: string
           key?: string
-          max_uses?: number
-          target_role?: Database["public"]["Enums"]["user_role"]
+          max_uses?: number | null
+          target_role?: Database["public"]["Enums"]["user_role"] | null
           uses?: number
         }
         Relationships: []
@@ -560,7 +262,6 @@ export type Database = {
     Functions: {
       can_comment_post: { Args: { _post: string }; Returns: boolean }
       can_view_post: { Args: { _post: string }; Returns: boolean }
-      comment_session_state: { Args: { _post: string }; Returns: Json }
       comment_wait_seconds: { Args: { _post: string }; Returns: number }
       current_grade: {
         Args: never
@@ -571,38 +272,13 @@ export type Database = {
         Returns: Database["public"]["Enums"]["user_role"]
       }
       current_section: { Args: never; Returns: string }
-      gen_comment_code: {
-        Args: { _class: string; _grade: string }
-        Returns: string
-      }
       has_role: {
         Args: { _role: Database["public"]["Enums"]["user_role"]; _uid: string }
         Returns: boolean
       }
-      increment_post_views: { Args: { _post: string }; Returns: undefined }
-      is_admin: { Args: never; Returns: boolean }
-      is_staff: { Args: never; Returns: boolean }
-      my_class: { Args: never; Returns: string }
-      my_grade: { Args: never; Returns: string }
       redeem_unlock_key: { Args: { _key: string }; Returns: Json }
-      start_comment_session: {
-        Args: {
-          _class: string
-          _grade: string
-          _minutes: number
-          _post: string
-        }
-        Returns: Json
-      }
-      stop_comment_session: { Args: { _session: string }; Returns: Json }
-      submit_comment: {
-        Args: { _code: string; _content: string; _post: string }
-        Returns: Json
-      }
     }
     Enums: {
-      app_role: "student" | "teacher" | "admin"
-      comment_status: "pending" | "approved" | "rejected"
       grade_level:
         | "1"
         | "2"
@@ -616,10 +292,8 @@ export type Database = {
         | "10"
         | "11"
         | "12"
-      post_status: "draft" | "published"
       unlock_action: "upgrade" | "downgrade"
       user_role: "default" | "poster" | "admin"
-      view_scope: "public" | "school" | "authenticated"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -747,8 +421,6 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["student", "teacher", "admin"],
-      comment_status: ["pending", "approved", "rejected"],
       grade_level: [
         "1",
         "2",
@@ -763,10 +435,8 @@ export const Constants = {
         "11",
         "12",
       ],
-      post_status: ["draft", "published"],
       unlock_action: ["upgrade", "downgrade"],
       user_role: ["default", "poster", "admin"],
-      view_scope: ["public", "school", "authenticated"],
     },
   },
 } as const
