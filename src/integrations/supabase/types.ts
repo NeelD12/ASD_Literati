@@ -181,6 +181,7 @@ export type Database = {
           grade: Database["public"]["Enums"]["grade_level"]
           id: string
           role: Database["public"]["Enums"]["user_role"]
+          section: string
           username: string
         }
         Insert: {
@@ -189,6 +190,7 @@ export type Database = {
           grade?: Database["public"]["Enums"]["grade_level"]
           id: string
           role?: Database["public"]["Enums"]["user_role"]
+          section?: string
           username: string
         }
         Update: {
@@ -197,6 +199,7 @@ export type Database = {
           grade?: Database["public"]["Enums"]["grade_level"]
           id?: string
           role?: Database["public"]["Enums"]["user_role"]
+          section?: string
           username?: string
         }
         Relationships: []
@@ -226,6 +229,9 @@ export type Database = {
           created_at: string
           id: string
           key: string
+          max_uses: number | null
+          target_role: Database["public"]["Enums"]["user_role"] | null
+          uses: number
         }
         Insert: {
           action: Database["public"]["Enums"]["unlock_action"]
@@ -233,6 +239,9 @@ export type Database = {
           created_at?: string
           id?: string
           key: string
+          max_uses?: number | null
+          target_role?: Database["public"]["Enums"]["user_role"] | null
+          uses?: number
         }
         Update: {
           action?: Database["public"]["Enums"]["unlock_action"]
@@ -240,6 +249,9 @@ export type Database = {
           created_at?: string
           id?: string
           key?: string
+          max_uses?: number | null
+          target_role?: Database["public"]["Enums"]["user_role"] | null
+          uses?: number
         }
         Relationships: []
       }
@@ -259,6 +271,7 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      current_section: { Args: never; Returns: string }
       has_role: {
         Args: { _role: Database["public"]["Enums"]["user_role"]; _uid: string }
         Returns: boolean
