@@ -244,6 +244,7 @@ export type Database = {
     Functions: {
       can_comment_post: { Args: { _post: string }; Returns: boolean }
       can_view_post: { Args: { _post: string }; Returns: boolean }
+      comment_wait_seconds: { Args: { _post: string }; Returns: number }
       current_grade: {
         Args: never
         Returns: Database["public"]["Enums"]["grade_level"]
