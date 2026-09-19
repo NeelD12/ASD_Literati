@@ -120,7 +120,9 @@ export type Database = {
       }
       posts: {
         Row: {
+          attachments: Json
           author_id: string
+          comment_cooldown_seconds: number
           content: string
           cover_image: string | null
           created_at: string
@@ -131,7 +133,9 @@ export type Database = {
           view_count: number
         }
         Insert: {
+          attachments?: Json
           author_id: string
+          comment_cooldown_seconds?: number
           content?: string
           cover_image?: string | null
           created_at?: string
@@ -142,7 +146,9 @@ export type Database = {
           view_count?: number
         }
         Update: {
+          attachments?: Json
           author_id?: string
+          comment_cooldown_seconds?: number
           content?: string
           cover_image?: string | null
           created_at?: string
@@ -186,6 +192,24 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["user_role"]
           username?: string
+        }
+        Relationships: []
+      }
+      unlock_key_attempts: {
+        Row: {
+          attempted_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          attempted_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          attempted_at?: string
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
