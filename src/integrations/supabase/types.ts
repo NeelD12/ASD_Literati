@@ -235,7 +235,19 @@ export type Database = {
       redeem_unlock_key: { Args: { _key: string }; Returns: Json }
     }
     Enums: {
-      grade_level: "6" | "7" | "8" | "9" | "10" | "11" | "12"
+      grade_level:
+        | "1"
+        | "2"
+        | "3"
+        | "4"
+        | "5"
+        | "6"
+        | "7"
+        | "8"
+        | "9"
+        | "10"
+        | "11"
+        | "12"
       unlock_action: "upgrade" | "downgrade"
       user_role: "default" | "poster" | "admin"
     }
@@ -365,7 +377,20 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      grade_level: ["6", "7", "8", "9", "10", "11", "12"],
+      grade_level: [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+      ],
       unlock_action: ["upgrade", "downgrade"],
       user_role: ["default", "poster", "admin"],
     },
