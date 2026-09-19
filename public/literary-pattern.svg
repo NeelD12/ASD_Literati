@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <g fill="none" stroke="#000" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity="1">
+    <!-- open book -->
+    <g transform="translate(24,30)">
+      <path d="M0 22 C10 14 24 14 34 20 C44 14 58 14 68 22 L68 46 C58 39 44 39 34 45 C24 39 10 39 0 46 Z"/>
+      <path d="M34 20 L34 45"/>
+      <path d="M8 26 L26 26 M8 32 L26 32 M42 26 L60 26 M42 32 L60 32"/>
+    </g>
+
+    <!-- quotation marks -->
+    <g transform="translate(140,26)">
+      <path d="M0 14 C0 6 6 0 14 0 L14 8 C10 8 8 10 8 14 L14 14 L14 26 L0 26 Z"/>
+      <path d="M24 14 C24 6 30 0 38 0 L38 8 C34 8 32 10 32 14 L38 14 L38 26 L24 26 Z"/>
+    </g>
+
+    <!-- pencil -->
+    <g transform="translate(238,20) rotate(35)">
+      <path d="M0 0 L46 0 L46 12 L0 12 Z"/>
+      <path d="M46 0 L60 6 L46 12"/>
+      <path d="M0 0 L0 12"/>
+      <path d="M56 4 L60 6 L56 8"/>
+    </g>
+
+    <!-- ink bottle -->
+    <g transform="translate(30,140)">
+      <path d="M8 12 L28 12 L32 22 L32 40 A4 4 0 0 1 28 44 L8 44 A4 4 0 0 1 4 40 L4 22 Z"/>
+      <path d="M12 4 L24 4 L24 12 L12 12 Z"/>
+      <path d="M10 30 L26 30"/>
+    </g>
+
+    <!-- quill -->
+    <g transform="translate(120,124)">
+      <path d="M2 60 C18 44 34 26 56 6 C58 22 50 40 34 52 C24 60 12 62 2 60 Z"/>
+      <path d="M2 60 L22 40"/>
+      <path d="M30 26 L40 30 M22 36 L32 40"/>
+    </g>
+
+    <!-- bookmark -->
+    <g transform="translate(240,140)">
+      <path d="M0 0 L26 0 L26 44 L13 33 L0 44 Z"/>
+    </g>
+
+    <!-- sheet of paper -->
+    <g transform="translate(36,236)">
+      <path d="M0 0 L36 0 L48 12 L48 56 L0 56 Z"/>
+      <path d="M36 0 L36 12 L48 12"/>
+      <path d="M8 24 L40 24 M8 32 L40 32 M8 40 L28 40"/>
+    </g>
+
+    <!-- typewriter -->
+    <g transform="translate(140,232)">
+      <path d="M4 20 L56 20 L60 44 L0 44 Z"/>
+      <path d="M14 20 L14 4 L46 4 L46 20"/>
+      <path d="M10 30 L50 30 M8 37 L52 37"/>
+    </g>
+
+    <!-- fountain pen nib -->
+    <g transform="translate(246,236)">
+      <path d="M14 0 L28 34 L14 48 L0 34 Z"/>
+      <path d="M14 14 L14 40"/>
+      <circle cx="14" cy="26" r="3"/>
+    </g>
+
+    <!-- small stacked books -->
+    <g transform="translate(214,86)">
+      <path d="M0 0 L44 0 L44 8 L0 8 Z"/>
+      <path d="M4 8 L48 8 L48 16 L4 16 Z"/>
+    </g>
+  </g>
+</svg>
