@@ -34,7 +34,7 @@ export const Route = createFileRoute("/auth")({
 // Username-only auth uses a synthetic, non-deliverable email under .local
 // so Supabase Auth (which requires an email) still works.
 export function usernameToEmail(username: string) {
-  return `${username.trim().toLowerCase()}@scholarly.local`;
+  return `${username.trim().toLowerCase()}@asdliterati.app`;
 }
 
 type AccountType = "student" | "teacher";
