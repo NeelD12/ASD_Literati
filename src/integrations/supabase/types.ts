@@ -276,6 +276,7 @@ export type Database = {
         Args: { _role: Database["public"]["Enums"]["user_role"]; _uid: string }
         Returns: boolean
       }
+      increment_post_views: { Args: { _post: string }; Returns: undefined }
       redeem_unlock_key: { Args: { _key: string }; Returns: Json }
     }
     Enums: {
