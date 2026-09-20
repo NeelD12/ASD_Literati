@@ -72,7 +72,7 @@ function Index() {
           Stories, essays, and ideas <span className="italic">from your classmates.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-          A quiet, focused place for grades 6–12 to write and read. Pieces are scoped by grade,
+          A quiet, focused place for grades 1–12 to write and read. Pieces are scoped by grade,
           so you only see what's meant for you.
         </p>
         {!userId && !loading ? (
