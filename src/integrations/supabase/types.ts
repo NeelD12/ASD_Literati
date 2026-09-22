@@ -124,6 +124,39 @@ export type Database = {
           },
         ]
       }
+      post_views: {
+        Row: {
+          post_id: string
+          user_id: string
+          viewed_at: string
+        }
+        Insert: {
+          post_id: string
+          user_id: string
+          viewed_at?: string
+        }
+        Update: {
+          post_id?: string
+          user_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_views_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_views_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           attachments: Json
