@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, Eye, EyeOff, GraduationCap, School } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff, GraduationCap, School, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
@@ -31,16 +31,14 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-// Username-only auth uses a synthetic, non-deliverable email under .local
-// so Supabase Auth (which requires an email) still works.
+// Username-only auth uses a synthetic, non-deliverable email under a real
+// TLD so Supabase Auth (which requires an email) still works. Nobody ever
+// sees, types, or gets anything sent to that address.
 export function usernameToEmail(username: string) {
   return `${username.trim().toLowerCase()}@asdliterati.app`;
 }
 
 type AccountType = "student" | "teacher";
-
-/** Access code required to create a teacher/admin account. */
-const TEACHER_ACCESS_ID = "asdxbTeacher@2026!";
 
 function AuthPage() {
   const { userId } = useAuth();
@@ -53,7 +51,8 @@ function AuthPage() {
 
   if (!accountType) {
     return (
-      <main className="mx-auto flex max-w-2xl flex-col px-4 py-16">
+      <main className="relative mx-auto flex max-w-2xl flex-col px-4 py-16">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Welcome to ASD Literati</h1>
         <p className="mt-2 text-muted-foreground">Who are you signing in as?</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -75,9 +74,11 @@ function AuthPage() {
               key={type}
               type="button"
               onClick={() => setAccountType(type)}
-              className="group flex flex-col items-start rounded-xl border bg-card p-6 text-left transition-colors hover:border-primary hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group flex flex-col items-start rounded-xl border bg-card p-6 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <Icon className="h-8 w-8 text-primary" />
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Icon className="h-6 w-6 text-primary" />
+              </span>
               <span className="mt-4 font-serif text-xl font-semibold">{title}</span>
               <span className="mt-1 text-sm text-muted-foreground">{desc}</span>
             </button>
@@ -87,8 +88,11 @@ function AuthPage() {
     );
   }
 
+  const Icon = accountType === "teacher" ? School : GraduationCap;
+
   return (
-    <main className="mx-auto flex max-w-md flex-col px-4 py-16">
+    <main className="relative mx-auto flex max-w-md flex-col px-4 py-16">
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
       <Button
         variant="ghost"
         size="sm"
@@ -98,8 +102,11 @@ function AuthPage() {
         <ChevronLeft className="mr-1 h-4 w-4" />
         Back
       </Button>
-      <Card>
-        <CardHeader>
+      <Card className="shadow-md">
+        <CardHeader className="items-center text-center">
+          <span className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <Icon className="h-7 w-7 text-primary" />
+          </span>
           <CardTitle className="font-serif text-2xl">
             {accountType === "teacher" ? "Teacher access" : "Student access"}
           </CardTitle>
@@ -161,6 +168,35 @@ function PasswordInput({
   );
 }
 
+/** Fixed "ASD-" prefix + a 7-digit-only field, for the School ID (signup only). */
+function SchoolIdInput({
+  id,
+  digits,
+  onChange,
+}: {
+  id: string;
+  digits: string;
+  onChange: (digits: string) => void;
+}) {
+  return (
+    <div className="flex">
+      <span className="flex select-none items-center rounded-l-md border border-r-0 bg-muted px-3 text-sm font-medium text-muted-foreground">
+        ASD-
+      </span>
+      <Input
+        id={id}
+        type="text"
+        inputMode="numeric"
+        placeholder="0012345"
+        value={digits}
+        onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 7))}
+        className="rounded-l-none font-mono tracking-wider"
+        maxLength={7}
+        required
+      />
+    </div>
+  );
+}
 
 function SignIn() {
   const [username, setUsername] = useState("");
@@ -196,7 +232,6 @@ function SignIn() {
         <p className="mt-1 text-xs text-muted-foreground">Passwords are case-sensitive.</p>
       </div>
 
-
       <Button type="submit" className="w-full" disabled={busy}>
         {busy ? "Signing in…" : "Sign in"}
       </Button>
@@ -207,31 +242,57 @@ function SignIn() {
 function SignUp({ accountType }: { accountType: AccountType }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [schoolIdDigits, setSchoolIdDigits] = useState("");
   const [grade, setGrade] = useState<Grade>(accountType === "teacher" ? "12" : "9");
   const [section, setSection] = useState<Section>("A");
-  const [teacherId, setTeacherId] = useState("");
+  const [adminKey, setAdminKey] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const cleanUsername = username.trim().toLowerCase();
     if (cleanUsername.length < 3) return toast.error("Username must be 3+ characters");
-if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers, underscores, periods, and hyphens only");
+    if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers, underscores, periods, and hyphens only");
     if (password.length < 6) return toast.error("Password must be 6+ characters");
-    if (accountType === "teacher" && teacherId !== TEACHER_ACCESS_ID)
-      return toast.error("Incorrect teacher ID");
+    if (schoolIdDigits.length !== 7) return toast.error("Enter your full 7-digit School ID");
+    if (accountType === "teacher" && adminKey.trim().length === 0)
+      return toast.error("Enter the Admin Key");
+
     setBusy(true);
     const { error } = await supabase.auth.signUp({
       email: usernameToEmail(cleanUsername),
       password,
       options: {
         emailRedirectTo: window.location.origin,
-        data: { username: cleanUsername, grade, section },
+        data: {
+          username: cleanUsername,
+          grade,
+          section,
+          school_id: schoolIdDigits,
+          ...(accountType === "teacher" ? { admin_key: adminKey.trim() } : {}),
+        },
       },
     });
     setBusy(false);
-    if (error) toast.error(error.message);
-    else toast.success("Account created — you're signed in.");
+
+    if (error) {
+      const msg = error.message || "";
+      if (msg.includes("already registered") || msg.includes("already been registered")) {
+        toast.error("This username is already taken");
+      } else if (msg.includes("school_id")) {
+        toast.error("This School ID is already registered to another account");
+      } else if (msg.includes("Invalid admin key")) {
+        toast.error("Incorrect Admin Key");
+      } else {
+        toast.error(msg || "Something went wrong — please try again");
+      }
+      return;
+    }
+    toast.success(
+      accountType === "teacher"
+        ? "Teacher account created and verified."
+        : "Account created — you're signed in."
+    );
   }
 
   return (
@@ -239,7 +300,14 @@ if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers,
       <div>
         <Label htmlFor="su-username">Username</Label>
         <Input id="su-username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <p className="mt-1 text-xs text-muted-foreground">3+ characters, letters/numbers/underscore.</p>
+        <p className="mt-1 text-xs text-muted-foreground">3+ characters. Letters, numbers, underscore, period, hyphen.</p>
+      </div>
+      <div>
+        <Label htmlFor="su-school-id">School ID</Label>
+        <SchoolIdInput id="su-school-id" digits={schoolIdDigits} onChange={setSchoolIdDigits} />
+        <p className="mt-1 text-xs text-muted-foreground">
+          Your 7-digit school ID number. One account per ID — it can't be used to register twice.
+        </p>
       </div>
       <div>
         <Label htmlFor="su-password">Password</Label>
@@ -250,7 +318,6 @@ if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers,
           value={password}
           onChange={setPassword}
         />
-
         <p className="mt-1 text-xs text-muted-foreground">
           6+ characters. Any characters allowed — passwords are case-sensitive.
         </p>
@@ -278,24 +345,22 @@ if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers,
           </div>
         </div>
       ) : (
-        <>
-          <div>
-            <Label htmlFor="su-teacher-id">Teacher ID</Label>
-            <PasswordInput
-              id="su-teacher-id"
-              autoComplete="off"
-              value={teacherId}
-              onChange={setTeacherId}
-            />
-
-            <p className="mt-1 text-xs text-muted-foreground">
-              Required to create a teacher account.
-            </p>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Teachers get posting access by redeeming an unlock key in Settings after signing up.
+        <div>
+          <Label htmlFor="su-admin-key" className="flex items-center gap-1.5">
+            <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+            Admin Key
+          </Label>
+          <PasswordInput
+            id="su-admin-key"
+            autoComplete="off"
+            value={adminKey}
+            onChange={setAdminKey}
+          />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Verifies you as a teacher and lets you see and comment on every post. Posting
+            access is a separate key you redeem afterward in Settings.
           </p>
-        </>
+        </div>
       )}
 
       <Button type="submit" className="w-full" disabled={busy}>
