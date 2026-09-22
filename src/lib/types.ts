@@ -19,9 +19,13 @@ export interface Profile {
   role: UserRole;
   grade: Grade;
   section: Section;
+  school_id: string;
+  is_teacher: boolean;
+  full_name: string;
+  gender: "Male" | "Female" | null;
+  age: number | null;
   created_at: string;
 }
-
 export interface Post {
   id: string;
   author_id: string;
