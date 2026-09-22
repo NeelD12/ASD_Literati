@@ -171,7 +171,7 @@ function SignIn() {
     e.preventDefault();
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({
-      email: usernameToEmail(username),
+      email: usernameToEmail(username.trim().toLowerCase()),
       password,
     });
     setBusy(false);
@@ -216,7 +216,7 @@ function SignUp({ accountType }: { accountType: AccountType }) {
     e.preventDefault();
     const cleanUsername = username.trim().toLowerCase();
     if (cleanUsername.length < 3) return toast.error("Username must be 3+ characters");
-    if (!/^[a-z0-9_]+$/.test(cleanUsername)) return toast.error("Letters, numbers, and underscores only");
+if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers, underscores, periods, and hyphens only");
     if (password.length < 6) return toast.error("Password must be 6+ characters");
     if (accountType === "teacher" && teacherId !== TEACHER_ACCESS_ID)
       return toast.error("Incorrect teacher ID");
