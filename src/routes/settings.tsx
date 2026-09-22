@@ -98,12 +98,15 @@ function Settings() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <div className="text-muted-foreground">Email</div>
-              <div className="font-medium">{profile.email}</div>
+              <div className="text-muted-foreground">School ID</div>
+              <div className="font-mono font-medium tracking-wider">ASD-{profile.school_id}</div>
             </div>
             <div>
               <div className="text-muted-foreground">Role</div>
-              <Badge variant="secondary">{profile.role}</Badge>
+              <div className="flex gap-1.5">
+                <Badge variant="secondary">{profile.role}</Badge>
+                {profile.is_teacher ? <Badge variant="outline">Verified teacher</Badge> : null}
+              </div>
             </div>
             <div>
               <div className="text-muted-foreground">Joined</div>
@@ -138,20 +141,24 @@ function Settings() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Key className="h-4 w-4" /> Unlock key</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            Enter an unlock key to upgrade to a Poster account, or to downgrade back to a Default account.
-          </p>
-          <div className="flex gap-2">
-            <Input value={key} onChange={(e) => setKey(e.target.value)} placeholder="Enter unlock key" />
-            <Button onClick={redeem} disabled={busy || !key.trim()}>Redeem</Button>
-          </div>
-        </CardContent>
-      </Card>
+      {profile.is_teacher ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Key className="h-4 w-4" /> Poster key</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Redeem the Poster key to permanently unlock the ability to publish posts.
+              You already see and comment on every post as a verified teacher — this only
+              affects whether you can create new posts.
+            </p>
+            <div className="flex gap-2">
+              <Input value={key} onChange={(e) => setKey(e.target.value)} placeholder="Enter poster key" />
+              <Button onClick={redeem} disabled={busy || !key.trim()}>Redeem</Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
     </main>
   );
 }
