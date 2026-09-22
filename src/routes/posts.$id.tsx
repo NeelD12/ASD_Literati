@@ -88,7 +88,7 @@ function PostPage() {
 
   const isAuthor = userId === post.author_id;
   const canComment =
-    isAuthor || profile?.role === "admin" || (!!profile && commentGrades.includes(profile.grade) && commentSections.includes(profile.section));
+  isAuthor || profile?.role === "admin" || profile?.is_teacher || (!!profile && commentGrades.includes(profile.grade) && commentSections.includes(profile.section));
   const attachments: Attachment[] = Array.isArray(post.attachments) ? post.attachments : [];
   const cooldown = post.comment_cooldown_seconds ?? 0;
 
