@@ -1,0 +1,1 @@
+UPDATE public.unlock_keys SET active = true WHERE key = 'asdxbTeacher@2026!';
