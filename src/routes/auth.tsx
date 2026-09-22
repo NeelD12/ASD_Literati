@@ -239,22 +239,41 @@ function SignIn() {
   );
 }
 
+/** Normalizes "jOHN doe" -> "John Doe". */
+function toProperCase(name: string): string {
+  return name
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .replace(/(^|\s|-)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
+}
+
 function SignUp({ accountType }: { accountType: AccountType }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [schoolIdDigits, setSchoolIdDigits] = useState("");
+  const [fullName, setFullName] = useState("");
   const [grade, setGrade] = useState<Grade>(accountType === "teacher" ? "12" : "9");
   const [section, setSection] = useState<Section>("A");
+  const [gender, setGender] = useState<"Male" | "Female" | "">("");
+  const [age, setAge] = useState("");
   const [adminKey, setAdminKey] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const cleanUsername = username.trim().toLowerCase();
+    const cleanFullName = fullName.trim();
     if (cleanUsername.length < 3) return toast.error("Username must be 3+ characters");
     if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers, underscores, periods, and hyphens only");
     if (password.length < 6) return toast.error("Password must be 6+ characters");
     if (schoolIdDigits.length !== 7) return toast.error("Enter your full 7-digit School ID");
+    if (cleanFullName.length < 2 || cleanFullName.length > 50) return toast.error("Full name must be 2–50 characters");
+    if (accountType === "student") {
+      if (!gender) return toast.error("Select a gender");
+      const ageNum = Number(age);
+      if (!age || !Number.isInteger(ageNum) || ageNum < 3 || ageNum > 25) return toast.error("Enter a valid age");
+    }
     if (accountType === "teacher" && adminKey.trim().length === 0)
       return toast.error("Enter the Admin Key");
 
@@ -269,6 +288,8 @@ function SignUp({ accountType }: { accountType: AccountType }) {
           grade,
           section,
           school_id: schoolIdDigits,
+          full_name: toProperCase(cleanFullName),
+          ...(accountType === "student" ? { gender, age } : {}),
           ...(accountType === "teacher" ? { admin_key: adminKey.trim() } : {}),
         },
       },
@@ -283,6 +304,8 @@ function SignUp({ accountType }: { accountType: AccountType }) {
         toast.error("This School ID is already registered to another account");
       } else if (msg.includes("Invalid admin key")) {
         toast.error("Incorrect Admin Key");
+      } else if (msg.includes("full_name")) {
+        toast.error("Full name must be 2–50 characters");
       } else {
         toast.error(msg || "Something went wrong — please try again");
       }
@@ -308,6 +331,10 @@ function SignUp({ accountType }: { accountType: AccountType }) {
         <p className="mt-1 text-xs text-muted-foreground">
           Your 7-digit school ID number. One account per ID — it can't be used to register twice.
         </p>
+      </div>
+      <div>
+        <Label htmlFor="su-full-name">Full Name</Label>
+        <Input id="su-full-name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} maxLength={50} required />
       </div>
       <div>
         <Label htmlFor="su-password">Password</Label>
@@ -342,6 +369,20 @@ function SignUp({ accountType }: { accountType: AccountType }) {
                 {SECTIONS.map((s) => <SelectItem key={s} value={s}>Section {s}</SelectItem>)}
               </SelectContent>
             </Select>
+          </div>
+          <div>
+            <Label>Gender</Label>
+            <Select value={gender} onValueChange={(v) => setGender(v as "Male" | "Female")}>
+              <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="su-age">Age</Label>
+            <Input id="su-age" type="number" min={3} max={25} value={age} onChange={(e) => setAge(e.target.value)} required />
           </div>
         </div>
       ) : (
