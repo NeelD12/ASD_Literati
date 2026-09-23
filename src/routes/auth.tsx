@@ -279,10 +279,28 @@ function SignUp({ accountType }: { accountType: AccountType }) {
       const ageNum = Number(age);
       if (!age || !Number.isInteger(ageNum) || ageNum < 3 || ageNum > 25) return toast.error("Enter a valid age");
     }
-    if (accountType === "teacher" && adminKey.trim().length === 0)
+        if (accountType === "teacher" && adminKey.trim().length === 0)
       return toast.error("Enter the Admin Key");
 
+    const { count: nameCount } = await supabase
+      .from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("username", slug);
+    if ((nameCount ?? 0) > 0) {
+      return toast.error("An account already exists with this name — try adding a middle name, or sign in instead");
+    }
+    if (accountType === "student") {
+      const { count: idCount } = await supabase
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .eq("school_id", schoolIdDigits);
+      if ((idCount ?? 0) > 0) {
+        return toast.error("This School ID is already registered to another account");
+      }
+    }
+
     setBusy(true);
+
     const { error } = await supabase.auth.signUp({
       email: usernameToEmail(slug),
       password,
