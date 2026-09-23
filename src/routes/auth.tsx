@@ -329,7 +329,7 @@ function SignUp({ accountType }: { accountType: AccountType }) {
       } else if (msg.includes("full_name")) {
         toast.error("Full name must be 2–50 characters");
       } else {
-        toast.error(msg || "Something went wrong — please try again");
+        toast.error("Couldn't create your account — double-check your details (name, School ID, or Admin Key) and try again");
       }
       return;
     }
