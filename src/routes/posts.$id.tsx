@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Pencil, Trash2, Eye, MessageSquare, Timer } from "lucide-react";
+import { Pencil, Trash2, Eye, MessageSquare, Timer, KeyRound, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
@@ -11,6 +11,7 @@ import { PdfList } from "@/components/pdf-list";
 import { Comments } from "@/components/comments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const Route = createFileRoute("/posts/$id")({
   ssr: false,
@@ -24,6 +25,88 @@ export const Route = createFileRoute("/posts/$id")({
   ] }),
   component: PostPage,
 });
+
+function secondsLeft(expiresAt: string): number {
+  return Math.max(0, Math.round((new Date(expiresAt).getTime() - Date.now()) / 1000));
+}
+
+/** Author-only: generate and display a 10-minute classroom comment code. */
+function CommentCodePanel({ postId }: { postId: string }) {
+  const [code, setCode] = useState<string | null>(null);
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [remaining, setRemaining] = useState(0);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("post_comment_codes")
+        .select("code,expires_at")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (data && secondsLeft(data.expires_at) > 0) {
+        setCode(data.code);
+        setExpiresAt(data.expires_at);
+        setRemaining(secondsLeft(data.expires_at));
+      }
+    })();
+  }, [postId]);
+
+  useEffect(() => {
+    if (!expiresAt) return;
+    const t = setInterval(() => setRemaining(secondsLeft(expiresAt)), 1000);
+    return () => clearInterval(t);
+  }, [expiresAt]);
+
+  async function generate() {
+    setBusy(true);
+    const { data, error } = await supabase.rpc("generate_comment_code", { _post: postId });
+    setBusy(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    const result = data as unknown as { code: string; expires_at: string };
+    setCode(result.code);
+    setExpiresAt(result.expires_at);
+    setRemaining(secondsLeft(result.expires_at));
+  }
+
+  const active = remaining > 0;
+
+  return (
+    <Card className="mb-8">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-base"><KeyRound className="h-4 w-4" /> Comment code</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="mb-3 text-sm text-muted-foreground">
+          Share this code with your class to let students comment for the next 10 minutes.
+          Teachers can always comment without one.
+        </p>
+        <div className="flex items-center gap-3">
+          {active && code ? (
+            <>
+              <span className="rounded-md border bg-muted px-4 py-2 font-mono text-2xl font-semibold tracking-[0.3em]">
+                {code}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                Expires in {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}
+              </span>
+            </>
+          ) : (
+            <span className="text-sm text-muted-foreground">No active code.</span>
+          )}
+          <Button size="sm" variant="outline" onClick={generate} disabled={busy}>
+            <RefreshCw className="mr-1.5 h-3 w-3" /> {active ? "Regenerate" : "Generate code"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 function PostPage() {
   const { id } = Route.useParams();
@@ -41,7 +124,7 @@ function PostPage() {
     (async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select(`*, author:profiles!posts_author_id_fkey(id,username)`)
+        .select(`*, author:profiles!posts_author_id_fkey(id,username,full_name)`)
         .eq("id", id)
         .maybeSingle();
       if (error || !data) {
@@ -87,8 +170,10 @@ function PostPage() {
   }
 
   const isAuthor = userId === post.author_id;
+  const isExempt = isAuthor || profile?.role === "admin" || !!profile?.is_teacher;
   const canComment =
-  isAuthor || profile?.role === "admin" || profile?.is_teacher || (!!profile && commentGrades.includes(profile.grade) && commentSections.includes(profile.section));
+    isExempt || (!!profile && commentGrades.includes(profile.grade) && commentSections.includes(profile.section));
+  const needsCode = !isExempt;
   const attachments: Attachment[] = Array.isArray(post.attachments) ? post.attachments : [];
   const cooldown = post.comment_cooldown_seconds ?? 0;
 
@@ -116,7 +201,7 @@ function PostPage() {
           </h1>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground sm:justify-between">
             <div>
-              By <span className="font-medium text-foreground">{post.author?.username}</span>{" "}
+              By <span className="font-medium text-foreground">{post.author?.full_name || post.author?.username}</span>{" "}
               · {format(new Date(post.created_at), "MMMM d, yyyy")}
             </div>
             <div className="flex items-center gap-4">
@@ -175,11 +260,14 @@ function PostPage() {
 
       <PdfList files={attachments} />
 
+      {isAuthor ? <CommentCodePanel postId={post.id} /> : null}
+
       <Comments
         postId={post.id}
         postAuthorId={post.author_id}
         canComment={canComment}
         cooldownSeconds={cooldown}
+        needsCode={needsCode}
       />
     </main>
   );
