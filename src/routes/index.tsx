@@ -59,7 +59,7 @@ function Index() {
   const filtered = useMemo(() => {
     return posts.filter((p) => {
       if (query && !p.title.toLowerCase().includes(query.toLowerCase())) return false;
-      if (author && !p.author?.username?.toLowerCase().includes(author.toLowerCase())) return false;
+      if (author && !p.author?.full_name?.toLowerCase().includes(author.toLowerCase())) return false;
       return true;
     });
   }, [posts, query, author]);

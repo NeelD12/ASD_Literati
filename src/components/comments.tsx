@@ -279,7 +279,7 @@ function CommentItem({
     <div className={depth > 0 ? "ml-6 border-l pl-4" : ""}>
       <div className="rounded-lg border bg-card p-4">
         <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{node.author?.full_name || node.author?.username || "Anonymous"}</span>
+          <span className="font-medium text-foreground">{node.author?.full_name || "Anonymous"}</span>
           <span>{formatDistanceToNow(new Date(node.created_at), { addSuffix: true })}</span>
         </div>
         {editing ? (
