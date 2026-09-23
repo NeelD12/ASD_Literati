@@ -31,11 +31,27 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-// Username-only auth uses a synthetic, non-deliverable email under a real
-// TLD so Supabase Auth (which requires an email) still works. Nobody ever
-// sees, types, or gets anything sent to that address.
+// Login is by Full Name (any characters, spaces allowed). Internally that's
+// slugified into a clean, unique "username" used to build a synthetic,
+// non-deliverable email, since Supabase Auth requires an email under the
+// hood. Nobody ever sees, types, or gets anything sent to that address.
+export function slugifyFullName(fullName: string): string {
+  return fullName
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ".")
+    .replace(/^\.+|\.+$/g, "");
+}
 export function usernameToEmail(username: string) {
-  return `${username.trim().toLowerCase()}@asdliterati.app`;
+  return `${username}@asdliterati.app`;
+}
+/** Normalizes "jOHN   doe" -> "John Doe". */
+export function toProperCase(name: string): string {
+  return name
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase()
+    .replace(/(^|\s|-)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
 }
 
 type AccountType = "student" | "teacher";
@@ -168,7 +184,7 @@ function PasswordInput({
   );
 }
 
-/** Fixed "ASD-" prefix + a 7-digit-only field, for the School ID (signup only). */
+/** Fixed "ASD-" prefix + a 7-digit-only field, for the School ID (students only, signup only). */
 function SchoolIdInput({
   id,
   digits,
@@ -199,7 +215,7 @@ function SchoolIdInput({
 }
 
 function SignIn() {
-  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -207,19 +223,19 @@ function SignIn() {
     e.preventDefault();
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({
-      email: usernameToEmail(username.trim().toLowerCase()),
+      email: usernameToEmail(slugifyFullName(fullName)),
       password,
     });
     setBusy(false);
-    if (error) toast.error("Invalid username or password");
+    if (error) toast.error("Invalid name or password");
     else toast.success("Signed in");
   }
 
   return (
     <form onSubmit={submit} className="mt-4 space-y-3">
       <div>
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <Label htmlFor="full-name">Full Name</Label>
+        <Input id="full-name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
@@ -239,20 +255,10 @@ function SignIn() {
   );
 }
 
-/** Normalizes "jOHN doe" -> "John Doe". */
-function toProperCase(name: string): string {
-  return name
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase()
-    .replace(/(^|\s|-)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase());
-}
-
 function SignUp({ accountType }: { accountType: AccountType }) {
-  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [schoolIdDigits, setSchoolIdDigits] = useState("");
-  const [fullName, setFullName] = useState("");
   const [grade, setGrade] = useState<Grade>(accountType === "teacher" ? "12" : "9");
   const [section, setSection] = useState<Section>("A");
   const [gender, setGender] = useState<"Male" | "Female" | "">("");
@@ -262,13 +268,12 @@ function SignUp({ accountType }: { accountType: AccountType }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const cleanUsername = username.trim().toLowerCase();
     const cleanFullName = fullName.trim();
-    if (cleanUsername.length < 3) return toast.error("Username must be 3+ characters");
-    if (!/^[a-z0-9_.-]+$/.test(cleanUsername)) return toast.error("Letters, numbers, underscores, periods, and hyphens only");
-    if (password.length < 6) return toast.error("Password must be 6+ characters");
-    if (schoolIdDigits.length !== 7) return toast.error("Enter your full 7-digit School ID");
+    const slug = slugifyFullName(cleanFullName);
     if (cleanFullName.length < 2 || cleanFullName.length > 50) return toast.error("Full name must be 2–50 characters");
+    if (slug.length < 2) return toast.error("Enter a valid name");
+    if (password.length < 6) return toast.error("Password must be 6+ characters");
+    if (accountType === "student" && schoolIdDigits.length !== 7) return toast.error("Enter your full 7-digit School ID");
     if (accountType === "student") {
       if (!gender) return toast.error("Select a gender");
       const ageNum = Number(age);
@@ -279,17 +284,16 @@ function SignUp({ accountType }: { accountType: AccountType }) {
 
     setBusy(true);
     const { error } = await supabase.auth.signUp({
-      email: usernameToEmail(cleanUsername),
+      email: usernameToEmail(slug),
       password,
       options: {
         emailRedirectTo: window.location.origin,
         data: {
-          username: cleanUsername,
+          username: slug,
+          full_name: toProperCase(cleanFullName),
           grade,
           section,
-          school_id: schoolIdDigits,
-          full_name: toProperCase(cleanFullName),
-          ...(accountType === "student" ? { gender, age } : {}),
+          ...(accountType === "student" ? { school_id: schoolIdDigits, gender, age } : {}),
           ...(accountType === "teacher" ? { admin_key: adminKey.trim() } : {}),
         },
       },
@@ -299,7 +303,7 @@ function SignUp({ accountType }: { accountType: AccountType }) {
     if (error) {
       const msg = error.message || "";
       if (msg.includes("already registered") || msg.includes("already been registered")) {
-        toast.error("This username is already taken");
+        toast.error("An account already exists with this name — try adding a middle name, or sign in instead");
       } else if (msg.includes("school_id")) {
         toast.error("This School ID is already registered to another account");
       } else if (msg.includes("Invalid admin key")) {
@@ -321,21 +325,19 @@ function SignUp({ accountType }: { accountType: AccountType }) {
   return (
     <form onSubmit={submit} className="mt-4 space-y-3">
       <div>
-        <Label htmlFor="su-username">Username</Label>
-        <Input id="su-username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <p className="mt-1 text-xs text-muted-foreground">3+ characters. Letters, numbers, underscore, period, hyphen.</p>
-      </div>
-      <div>
-        <Label htmlFor="su-school-id">School ID</Label>
-        <SchoolIdInput id="su-school-id" digits={schoolIdDigits} onChange={setSchoolIdDigits} />
-        <p className="mt-1 text-xs text-muted-foreground">
-          Your 7-digit school ID number. One account per ID — it can't be used to register twice.
-        </p>
-      </div>
-      <div>
         <Label htmlFor="su-full-name">Full Name</Label>
         <Input id="su-full-name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} maxLength={50} required />
+        <p className="mt-1 text-xs text-muted-foreground">This is also how you'll sign in.</p>
       </div>
+      {accountType === "student" ? (
+        <div>
+          <Label htmlFor="su-school-id">School ID</Label>
+          <SchoolIdInput id="su-school-id" digits={schoolIdDigits} onChange={setSchoolIdDigits} />
+          <p className="mt-1 text-xs text-muted-foreground">
+            Your 7-digit school ID number. One account per ID — it can't be used to register twice.
+          </p>
+        </div>
+      ) : null}
       <div>
         <Label htmlFor="su-password">Password</Label>
         <PasswordInput
