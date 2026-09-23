@@ -19,7 +19,7 @@ export interface Profile {
   role: UserRole;
   grade: Grade;
   section: Section;
-  school_id: string;
+  school_id: string | null;
   is_teacher: boolean;
   full_name: string;
   gender: "Male" | "Female" | null;
@@ -36,9 +36,10 @@ export interface Post {
   attachments: Attachment[];
   comment_cooldown_seconds: number;
   view_count: number;
+  current_comment_code: string | null;
   created_at: string;
   updated_at: string;
-  author?: Pick<Profile, "id" | "username">;
+  author?: Pick<Profile, "id" | "full_name">;
   view_grades?: Grade[];
   comment_grades?: Grade[];
   view_sections?: Section[];
@@ -52,9 +53,10 @@ export interface Comment {
   author_id: string;
   parent_id: string | null;
   content: string;
+  entry_code: string | null;
   created_at: string;
   updated_at: string;
-  author?: Pick<Profile, "id" | "username">;
+  author?: Pick<Profile, "id" | "full_name">;
 }
 
 /** Options for the "time gap between comments" control. */

@@ -35,7 +35,6 @@ export const Route = createFileRoute("/settings")({
 function Settings() {
   const { userId, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [grade, setGrade] = useState<Grade>("9");
   const [section, setSection] = useState<Section>("A");
   const [key, setKey] = useState("");
@@ -45,7 +44,6 @@ function Settings() {
     if (loading) return;
     if (!userId) navigate({ to: "/auth" });
     if (profile) {
-      setUsername(profile.username);
       setGrade(profile.grade);
       setSection(profile.section);
     }
@@ -56,7 +54,7 @@ function Settings() {
     setBusy(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ username: username.trim(), grade, section })
+      .update({ grade, section })
       .eq("id", userId);
     setBusy(false);
     if (error) toast.error(error.message);
@@ -98,8 +96,8 @@ function Settings() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <div className="text-muted-foreground">School ID</div>
-              <div className="font-mono font-medium tracking-wider">ASD-{profile.school_id}</div>
+              <div className="text-muted-foreground">Full Name</div>
+              <div className="font-medium">{profile.full_name}</div>
             </div>
             <div>
               <div className="text-muted-foreground">Role</div>
@@ -108,14 +106,16 @@ function Settings() {
                 {profile.is_teacher ? <Badge variant="outline">Verified teacher</Badge> : null}
               </div>
             </div>
+            {profile.school_id ? (
+              <div>
+                <div className="text-muted-foreground">School ID</div>
+                <div className="font-mono font-medium tracking-wider">ASD-{profile.school_id}</div>
+              </div>
+            ) : null}
             <div>
               <div className="text-muted-foreground">Joined</div>
               <div className="font-medium">{format(new Date(profile.created_at), "MMM d, yyyy")}</div>
             </div>
-          </div>
-          <div>
-            <Label htmlFor="username">Username</Label>
-            <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div>
             <Label>Section</Label>
