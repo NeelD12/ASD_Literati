@@ -124,7 +124,7 @@ function PostPage() {
     (async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select(`*, author:profiles!posts_author_id_fkey(id,username,full_name)`)
+        .select(`*, author:profiles!posts_author_id_fkey(id,full_name)`)
         .eq("id", id)
         .maybeSingle();
       if (error || !data) {
