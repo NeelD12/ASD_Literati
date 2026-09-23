@@ -29,7 +29,7 @@ export function PostCard({ post }: { post: Post }) {
       ) : null}
       <div className="flex flex-1 flex-col gap-4 p-6 sm:p-8">
         <p className="eyebrow">
-          {post.author?.username ?? "Anonymous"} · {format(new Date(post.created_at), "MMM d, yyyy")}
+          {post.author?.full_name ?? "Anonymous"} · {format(new Date(post.created_at), "MMM d, yyyy")}
         </p>
         <h2 className="font-serif text-3xl font-semibold leading-[1.15] text-foreground underline-offset-4 transition-colors group-hover:text-primary">
           {post.title}

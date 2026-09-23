@@ -201,7 +201,7 @@ function PostPage() {
           </h1>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground sm:justify-between">
             <div>
-              By <span className="font-medium text-foreground">{post.author?.full_name || post.author?.username}</span>{" "}
+              By <span className="font-medium text-foreground">{post.author?.full_name}</span>{" "}
               · {format(new Date(post.created_at), "MMMM d, yyyy")}
             </div>
             <div className="flex items-center gap-4">
