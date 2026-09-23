@@ -65,7 +65,7 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
   const load = useCallback(async () => {
     const { data, error } = await supabase
       .from("comments")
-      .select("*, author:profiles!comments_author_id_fkey(id,username,full_name)")
+      .select("*, author:profiles!comments_author_id_fkey(id,full_name)")
       .eq("post_id", postId)
       .order("created_at", { ascending: true });
     if (!error) setComments((data as unknown as Comment[]) ?? []);
@@ -109,7 +109,7 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
     });
     setSubmitting(false);
     if (error) {
-      toast.error(error.message.includes("code") ? error.message : error.message);
+      toast.error(error.message);
       refreshWait();
     } else {
       setText("");
@@ -279,7 +279,7 @@ function CommentItem({
     <div className={depth > 0 ? "ml-6 border-l pl-4" : ""}>
       <div className="rounded-lg border bg-card p-4">
         <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{node.author?.full_name || "Anonymous"}</span>
+          <span className="font-medium text-foreground">{node.author?.full_name ?? "Anonymous"}</span>
           <span>{formatDistanceToNow(new Date(node.created_at), { addSuffix: true })}</span>
         </div>
         {editing ? (
@@ -350,4 +350,3 @@ function CommentItem({
     </div>
   );
 }
-
