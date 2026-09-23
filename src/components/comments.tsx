@@ -1,18 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Trash2, Pencil, Reply, Send, Timer } from "lucide-react";
+import { Trash2, Pencil, Reply, Send, Timer, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { formatCooldown, type Comment } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 interface Props {
   postId: string;
   postAuthorId: string;
   canComment: boolean;
   cooldownSeconds?: number;
+  /** True if the current viewer needs a teacher-shared code to comment (students only —
+   *  the post author, admins, and verified teachers never need one). */
+  needsCode: boolean;
 }
 
 interface CommentNode extends Comment {
@@ -40,11 +44,12 @@ function countdownLabel(seconds: number): string {
   return m > 0 ? `${m}m ${String(s).padStart(2, "0")}s` : `${s}s`;
 }
 
-export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0 }: Props) {
+export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0, needsCode }: Props) {
   const { userId } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState("");
+  const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [wait, setWait] = useState(0);
 
@@ -60,7 +65,7 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
   const load = useCallback(async () => {
     const { data, error } = await supabase
       .from("comments")
-      .select("*, author:profiles!comments_author_id_fkey(id,username)")
+      .select("*, author:profiles!comments_author_id_fkey(id,username,full_name)")
       .eq("post_id", postId)
       .order("created_at", { ascending: true });
     if (!error) setComments((data as unknown as Comment[]) ?? []);
@@ -90,16 +95,21 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
 
   async function submit(parentId: string | null, content: string) {
     if (!content.trim() || !userId) return;
+    if (needsCode && !code.trim()) {
+      toast.error("Enter the code your teacher shared to comment");
+      return;
+    }
     setSubmitting(true);
     const { error } = await supabase.from("comments").insert({
       post_id: postId,
       author_id: userId,
       parent_id: parentId,
       content: content.trim(),
+      ...(needsCode ? { entry_code: code.trim() } : {}),
     });
     setSubmitting(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message.includes("code") ? error.message : error.message);
       refreshWait();
     } else {
       setText("");
@@ -126,6 +136,21 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
 
       {canComment ? (
         <div className="mt-4 space-y-2">
+          {needsCode ? (
+            <div>
+              <label htmlFor="comment-code" className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <KeyRound className="h-3 w-3" /> Comment code (from your teacher)
+              </label>
+              <Input
+                id="comment-code"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="6-digit code"
+                inputMode="numeric"
+                className="max-w-[10rem] font-mono tracking-widest"
+              />
+            </div>
+          ) : null}
           <Textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -169,6 +194,7 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
               postAuthorId={postAuthorId}
               postId={postId}
               canComment={canComment && !blocked}
+              needsCode={needsCode}
               onChange={load}
             />
           ))
@@ -183,6 +209,7 @@ function CommentItem({
   postAuthorId,
   postId,
   canComment,
+  needsCode,
   onChange,
   depth = 0,
 }: {
@@ -190,6 +217,7 @@ function CommentItem({
   postAuthorId: string;
   postId: string;
   canComment: boolean;
+  needsCode: boolean;
   onChange: () => void;
   depth?: number;
 }) {
@@ -198,6 +226,7 @@ function CommentItem({
   const [replyOpen, setReplyOpen] = useState(false);
   const [draft, setDraft] = useState(node.content);
   const [reply, setReply] = useState("");
+  const [replyCode, setReplyCode] = useState("");
   const canDelete = userId === node.author_id || userId === postAuthorId;
   const canEdit = userId === node.author_id;
 
@@ -226,15 +255,21 @@ function CommentItem({
 
   async function postReply() {
     if (!reply.trim() || !userId) return;
+    if (needsCode && !replyCode.trim()) {
+      toast.error("Enter the code your teacher shared to comment");
+      return;
+    }
     const { error } = await supabase.from("comments").insert({
       post_id: postId,
       author_id: userId,
       parent_id: node.id,
       content: reply.trim(),
+      ...(needsCode ? { entry_code: replyCode.trim() } : {}),
     });
     if (error) toast.error(error.message);
     else {
       setReply("");
+      setReplyCode("");
       setReplyOpen(false);
       onChange();
     }
@@ -244,7 +279,7 @@ function CommentItem({
     <div className={depth > 0 ? "ml-6 border-l pl-4" : ""}>
       <div className="rounded-lg border bg-card p-4">
         <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{node.author?.username ?? "Anonymous"}</span>
+          <span className="font-medium text-foreground">{node.author?.full_name || node.author?.username || "Anonymous"}</span>
           <span>{formatDistanceToNow(new Date(node.created_at), { addSuffix: true })}</span>
         </div>
         {editing ? (
@@ -279,6 +314,15 @@ function CommentItem({
         ) : null}
         {replyOpen ? (
           <div className="mt-3 space-y-2">
+            {needsCode ? (
+              <Input
+                value={replyCode}
+                onChange={(e) => setReplyCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="6-digit code"
+                inputMode="numeric"
+                className="max-w-[10rem] font-mono tracking-widest"
+              />
+            ) : null}
             <Textarea value={reply} onChange={(e) => setReply(e.target.value)} rows={2} placeholder="Write a reply…" />
             <div className="flex gap-2">
               <Button size="sm" onClick={postReply}>Reply</Button>
@@ -296,6 +340,7 @@ function CommentItem({
               postAuthorId={postAuthorId}
               postId={postId}
               canComment={canComment}
+              needsCode={needsCode}
               onChange={onChange}
               depth={depth + 1}
             />
@@ -305,3 +350,4 @@ function CommentItem({
     </div>
   );
 }
+
