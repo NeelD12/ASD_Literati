@@ -19,6 +19,7 @@ export type Database = {
           author_id: string
           content: string
           created_at: string
+          entry_code: string | null
           id: string
           parent_id: string | null
           post_id: string
@@ -28,6 +29,7 @@ export type Database = {
           author_id: string
           content: string
           created_at?: string
+          entry_code?: string | null
           id?: string
           parent_id?: string | null
           post_id: string
@@ -37,6 +39,7 @@ export type Database = {
           author_id?: string
           content?: string
           created_at?: string
+          entry_code?: string | null
           id?: string
           parent_id?: string | null
           post_id?: string
@@ -59,6 +62,38 @@ export type Database = {
           },
           {
             foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_comment_codes: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comment_codes_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
@@ -165,6 +200,7 @@ export type Database = {
           content: string
           cover_image: string | null
           created_at: string
+          current_comment_code: string | null
           id: string
           tags: string[]
           title: string
@@ -178,6 +214,7 @@ export type Database = {
           content?: string
           cover_image?: string | null
           created_at?: string
+          current_comment_code?: string | null
           id?: string
           tags?: string[]
           title: string
@@ -191,6 +228,7 @@ export type Database = {
           content?: string
           cover_image?: string | null
           created_at?: string
+          current_comment_code?: string | null
           id?: string
           tags?: string[]
           title?: string
@@ -209,29 +247,44 @@ export type Database = {
       }
       profiles: {
         Row: {
+          age: number | null
           created_at: string
           email: string
+          full_name: string
+          gender: string | null
           grade: Database["public"]["Enums"]["grade_level"]
           id: string
+          is_teacher: boolean
           role: Database["public"]["Enums"]["user_role"]
+          school_id: string | null
           section: string
           username: string
         }
         Insert: {
+          age?: number | null
           created_at?: string
           email: string
+          full_name: string
+          gender?: string | null
           grade?: Database["public"]["Enums"]["grade_level"]
           id: string
+          is_teacher?: boolean
           role?: Database["public"]["Enums"]["user_role"]
+          school_id?: string | null
           section?: string
           username: string
         }
         Update: {
+          age?: number | null
           created_at?: string
           email?: string
+          full_name?: string
+          gender?: string | null
           grade?: Database["public"]["Enums"]["grade_level"]
           id?: string
+          is_teacher?: boolean
           role?: Database["public"]["Enums"]["user_role"]
+          school_id?: string | null
           section?: string
           username?: string
         }
@@ -305,6 +358,7 @@ export type Database = {
         Returns: Database["public"]["Enums"]["user_role"]
       }
       current_section: { Args: never; Returns: string }
+      generate_comment_code: { Args: { _post: string }; Returns: Json }
       has_role: {
         Args: { _role: Database["public"]["Enums"]["user_role"]; _uid: string }
         Returns: boolean
@@ -326,7 +380,7 @@ export type Database = {
         | "10"
         | "11"
         | "12"
-      unlock_action: "upgrade" | "downgrade"
+      unlock_action: "upgrade" | "downgrade" | "admin_gate"
       user_role: "default" | "poster" | "admin"
     }
     CompositeTypes: {
@@ -469,7 +523,7 @@ export const Constants = {
         "11",
         "12",
       ],
-      unlock_action: ["upgrade", "downgrade"],
+      unlock_action: ["upgrade", "downgrade", "admin_gate"],
       user_role: ["default", "poster", "admin"],
     },
   },
