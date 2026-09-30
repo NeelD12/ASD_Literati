@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Eye, EyeOff, GraduationCap, School, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { GRADES, SECTIONS, type Grade, type Section } from "@/lib/types";
@@ -18,8 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const authSearchSchema = z.object({
+  role: z.enum(["student", "teacher"]).optional(),
+});
+
 export const Route = createFileRoute("/auth")({
   ssr: false,
+  validateSearch: authSearchSchema,
   head: () => ({ meta: [
     { title: "Sign In | ASD Literati" },
     { name: "description", content: "Sign in or create an ASD Literati student or teacher account." },
@@ -59,16 +65,23 @@ type AccountType = "student" | "teacher";
 function AuthPage() {
   const { userId } = useAuth();
   const navigate = useNavigate();
-  const [accountType, setAccountType] = useState<AccountType | null>(null);
+  const search = Route.useSearch();
+  const [accountType, setAccountType] = useState<AccountType | null>(search.role ?? null);
 
   useEffect(() => {
     if (userId) navigate({ to: "/" });
   }, [userId, navigate]);
 
+  // A landing-page card can deep-link straight into a role's form
+  // (/auth?role=teacher) even if this route was already mounted.
+  useEffect(() => {
+    if (search.role) setAccountType(search.role);
+  }, [search.role]);
+
   if (!accountType) {
     return (
       <main className="relative mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col px-4 py-16">
-        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-100 via-sky-50/70 to-sky-50/25 dark:from-sky-950/45 dark:via-sky-950/20 dark:to-sky-950/10" />
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200 via-sky-100 to-sky-50 dark:from-sky-950 dark:via-sky-900 dark:to-sky-950" />
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Welcome to ASD Literati</h1>
         <p className="mt-2 text-muted-foreground">Who are you signing in as?</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -108,7 +121,7 @@ function AuthPage() {
 
   return (
     <main className="relative mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-md flex-col px-4 py-16">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-100 via-sky-50/70 to-sky-50/25 dark:from-sky-950/45 dark:via-sky-950/20 dark:to-sky-950/10" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200 via-sky-100 to-sky-50 dark:from-sky-950 dark:via-sky-900 dark:to-sky-950" />
       <Button
         variant="ghost"
         size="sm"

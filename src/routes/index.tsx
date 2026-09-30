@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PenLine, Search } from "lucide-react";
+import { BookOpen, GraduationCap, PenLine, School, Search } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import type { Post } from "@/lib/types";
@@ -13,9 +13,15 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ASD Literati | Student Literary Review" },
-      { name: "description", content: "Read essays, stories, and ideas from ASD Literati's student writers." },
+      {
+        name: "description",
+        content: "Read essays, stories, and ideas from ASD Literati's student writers.",
+      },
       { property: "og:title", content: "ASD Literati | Student Literary Review" },
-      { property: "og:description", content: "Read essays, stories, and ideas from ASD Literati's student writers." },
+      {
+        property: "og:description",
+        content: "Read essays, stories, and ideas from ASD Literati's student writers.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -68,96 +74,143 @@ function Index() {
   const filtered = useMemo(() => {
     return posts.filter((p) => {
       if (query && !p.title.toLowerCase().includes(query.toLowerCase())) return false;
-      if (author && !p.author?.full_name?.toLowerCase().includes(author.toLowerCase())) return false;
+      if (author && !p.author?.full_name?.toLowerCase().includes(author.toLowerCase()))
+        return false;
       return true;
     });
   }, [posts, query, author]);
 
+  // Logged-out visitors get a distinct landing page — not the signed-in
+  // feed. Loading is treated the same as logged-out here to avoid a flash
+  // of the feed shell before auth resolves.
+  if (!userId) {
+    if (loading) return null;
+    return (
+      <main className="relative">
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200 via-sky-100 to-sky-50 dark:from-sky-950 dark:via-sky-900 dark:to-sky-950" />
+        <div className="mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
+          <span className="flex h-20 w-20 items-center justify-center rounded-full bg-sky-500/10 shadow-sm">
+            <BookOpen className="h-9 w-9 text-sky-600 dark:text-sky-400" />
+          </span>
+          <p className="eyebrow mt-6">Volume I · A Student Literary Review</p>
+          <h1 className="mt-3 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">
+            ASD Literati
+          </h1>
+          <p className="mt-3 max-w-md text-muted-foreground">
+            Empowering student voices to write, share, and be heard — grades 1–12.
+          </p>
+
+          <div className="mt-10 grid w-full gap-4 sm:grid-cols-2">
+            {[
+              {
+                role: "student" as const,
+                icon: GraduationCap,
+                title: "Student",
+                desc: "Read posts shared with your grade and join the discussion.",
+              },
+              {
+                role: "teacher" as const,
+                icon: School,
+                title: "Teacher",
+                desc: "Publish posts and control who can read and comment.",
+              },
+            ].map(({ role, icon: Icon, title, desc }) => (
+              <Link
+                key={role}
+                to="/auth"
+                search={{ role }}
+                className="group flex flex-col items-start rounded-xl border bg-card/95 p-6 text-left shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-sky-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-500/10">
+                  <Icon className="h-6 w-6 text-sky-600 dark:text-sky-400" />
+                </span>
+                <span className="mt-4 font-serif text-xl font-semibold">{title}</span>
+                <span className="mt-1 text-sm text-muted-foreground">{desc}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <section className="mb-14 rounded-2xl border bg-background/70 px-5 py-12 text-center shadow-sm backdrop-blur-sm sm:px-10 sm:py-16">
+      <div className="mb-8">
         <p className="eyebrow">Volume I · A Student Literary Review</p>
-        <h1 className="mx-auto mt-4 max-w-4xl font-serif text-4xl font-semibold leading-[1.08] sm:text-6xl">
-          Stories, essays, and ideas <span className="italic">from your classmates.</span>
+        <h1 className="mt-1.5 font-serif text-2xl font-semibold sm:text-3xl">
+          Latest from your classmates
         </h1>
-        <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-          A quiet, focused place for grades 1–12 to write and read. Pieces are scoped by grade,
-          so you only see what's meant for you.
-        </p>
-        {!userId && !loading ? (
-          <Button asChild size="lg" className="mt-8 h-16 rounded-full px-12 text-lg shadow-lg sm:px-14">
-            <Link to="/auth">Sign in to start reading</Link>
-          </Button>
-        ) : null}
-      </section>
+      </div>
 
-      {userId ? (
-        <>
-          {canPost ? (
-            <div className="mb-12 flex flex-col gap-5 border-y bg-card/60 px-6 py-7 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="eyebrow">For contributors</p>
-                <h2 className="mt-1.5 font-serif text-2xl font-semibold">Ready to publish?</h2>
-                <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                  Rich text editor, PDF attachments, per-grade read and comment access, and a
-                  comment time gap — all in one place.
-                </p>
-              </div>
-              <Button asChild size="lg" className="h-12 shrink-0 gap-2 rounded-full px-7 text-base shadow-md transition-transform hover:scale-[1.02]">
-                <Link to="/create">
-                  <PenLine className="h-4 w-4" />
-                  New post
-                </Link>
-              </Button>
-            </div>
-          ) : null}
-
-          <div className="mb-10 flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search pieces by title…"
-                className="h-12 rounded-full bg-card pl-10 text-base shadow-sm"
-              />
-            </div>
-            <Input
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              placeholder="Filter by author"
-              className="h-12 rounded-full bg-card text-base shadow-sm sm:max-w-xs"
-            />
-          </div>
-
-
-          {fetching ? (
-            <div className="grid gap-px bg-border sm:grid-cols-2">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse space-y-4 bg-background p-6">
-                  <div className="h-3 w-32 bg-muted" />
-                  <div className="h-6 w-3/4 bg-muted" />
-                  <div className="h-3 w-full bg-muted" />
-                  <div className="h-3 w-2/3 bg-muted" />
-                </div>
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="border p-16 text-center">
-              <p className="font-serif text-2xl">No pieces to show yet.</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                When writers in your grade publish, you'll see them here.
+      <>
+        {canPost ? (
+          <div className="mb-12 flex flex-col gap-5 border-y bg-card/60 px-6 py-7 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="eyebrow">For contributors</p>
+              <h2 className="mt-1.5 font-serif text-2xl font-semibold">Ready to publish?</h2>
+              <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                Rich text editor, PDF attachments, per-grade read and comment access, and a comment
+                time gap — all in one place.
               </p>
             </div>
-          ) : (
-            <div className="grid gap-px border bg-border sm:grid-cols-2">
-              {filtered.map((p) => (
-                <PostCard key={p.id} post={p} />
-              ))}
-            </div>
-          )}
-        </>
-      ) : null}
+            <Button
+              asChild
+              size="lg"
+              className="h-12 shrink-0 gap-2 rounded-full px-7 text-base shadow-md transition-transform hover:scale-[1.02]"
+            >
+              <Link to="/create">
+                <PenLine className="h-4 w-4" />
+                New post
+              </Link>
+            </Button>
+          </div>
+        ) : null}
+
+        <div className="mb-10 flex flex-col gap-3 sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search pieces by title…"
+              className="h-12 rounded-full bg-card pl-10 text-base shadow-sm"
+            />
+          </div>
+          <Input
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            placeholder="Filter by author"
+            className="h-12 rounded-full bg-card text-base shadow-sm sm:max-w-xs"
+          />
+        </div>
+
+        {fetching ? (
+          <div className="grid gap-px bg-border sm:grid-cols-2">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse space-y-4 bg-background p-6">
+                <div className="h-3 w-32 bg-muted" />
+                <div className="h-6 w-3/4 bg-muted" />
+                <div className="h-3 w-full bg-muted" />
+                <div className="h-3 w-2/3 bg-muted" />
+              </div>
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="border p-16 text-center">
+            <p className="font-serif text-2xl">No pieces to show yet.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              When writers in your grade publish, you'll see them here.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-px border bg-border sm:grid-cols-2">
+            {filtered.map((p) => (
+              <PostCard key={p.id} post={p} />
+            ))}
+          </div>
+        )}
+      </>
     </main>
   );
 }
