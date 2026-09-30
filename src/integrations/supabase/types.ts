@@ -69,6 +69,54 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          link: string | null
+          post_id: string | null
+          read: boolean
+          recipient_id: string
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          post_id?: string | null
+          read?: boolean
+          recipient_id: string
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          post_id?: string | null
+          read?: boolean
+          recipient_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_comment_codes: {
         Row: {
           code: string
@@ -364,6 +412,8 @@ export type Database = {
         Returns: boolean
       }
       increment_post_views: { Args: { _post: string }; Returns: undefined }
+      mark_all_notifications_read: { Args: never; Returns: undefined }
+      mark_notification_read: { Args: { _id: string }; Returns: undefined }
       redeem_unlock_key: { Args: { _key: string }; Returns: Json }
     }
     Enums: {
