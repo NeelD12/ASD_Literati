@@ -30,7 +30,7 @@ function secondsLeft(expiresAt: string): number {
   return Math.max(0, Math.round((new Date(expiresAt).getTime() - Date.now()) / 1000));
 }
 
-/** Author-only: generate and display a 10-minute classroom comment code. */
+/** Author-only: generate and display a 30-minute classroom comment code. */
 function CommentCodePanel({ postId }: { postId: string }) {
   const [code, setCode] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
@@ -83,7 +83,7 @@ function CommentCodePanel({ postId }: { postId: string }) {
       </CardHeader>
       <CardContent>
         <p className="mb-3 text-sm text-muted-foreground">
-          Share this code with your class to let students comment for the next 10 minutes.
+          Share this code with your class to let students comment for the next 30 minutes.
           Teachers can always comment without one.
         </p>
         <div className="flex items-center gap-3">
