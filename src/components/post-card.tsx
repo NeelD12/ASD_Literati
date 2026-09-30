@@ -31,7 +31,7 @@ export function PostCard({ post }: { post: Post }) {
         <p className="eyebrow">
           {post.author?.full_name ?? "Anonymous"} · {format(new Date(post.created_at), "MMM d, yyyy")}
         </p>
-        <h2 className="font-serif text-3xl font-semibold leading-[1.15] text-foreground underline-offset-4 transition-colors group-hover:text-primary">
+        <h2 className="font-serif text-2xl font-semibold leading-[1.2] text-foreground underline-offset-4 transition-colors group-hover:text-primary">
           {post.title}
         </h2>
         <p className="text-[15px] leading-relaxed text-muted-foreground">{excerpt(post.content)}</p>

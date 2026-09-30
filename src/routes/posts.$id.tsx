@@ -196,7 +196,7 @@ function PostPage() {
 
         <header className="mb-10 border-b pb-8 text-center sm:text-left">
           <p className="eyebrow">Essay</p>
-          <h1 className="mt-3 font-serif text-5xl font-semibold leading-[1.1] sm:text-6xl">
+          <h1 className="mt-3 font-serif text-3xl font-semibold leading-[1.15] sm:text-5xl">
             {post.title}
           </h1>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground sm:justify-between">

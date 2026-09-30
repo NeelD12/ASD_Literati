@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Info } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import "@fontsource/bodoni-moda/400.css";
@@ -121,6 +123,28 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function CreditWidget() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          aria-label="About ASD Literati"
+          className="fixed bottom-5 right-5 z-50 flex h-10 w-10 items-center justify-center rounded-full border bg-card/95 text-muted-foreground shadow-md backdrop-blur-sm transition-colors hover:text-foreground hover:shadow-lg"
+        >
+          <Info className="h-4 w-4" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" side="top" className="w-64">
+        <p className="font-serif text-base font-semibold">ASD Literati</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Developed by Neel Dhakan, Adityansu Pattanaik.
+        </p>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -132,6 +156,7 @@ function RootComponent() {
           <Header />
           <Outlet />
           <Toaster richColors position="top-right" />
+          <CreditWidget />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

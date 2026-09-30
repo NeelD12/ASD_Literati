@@ -36,7 +36,7 @@ function Index() {
     const { data } = await supabase
       .from("posts")
       .select(
-        `*, author:profiles!posts_author_id_fkey(id,username),
+        `*, author:profiles!posts_author_id_fkey(id,full_name),
          view_perms:post_view_permissions(grade,section),
          comment_count:comments(count)`,
       )
@@ -77,7 +77,7 @@ function Index() {
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <section className="mb-14 rounded-2xl border bg-background/70 px-5 py-12 text-center shadow-sm backdrop-blur-sm sm:px-10 sm:py-16">
         <p className="eyebrow">Volume I · A Student Literary Review</p>
-        <h1 className="mx-auto mt-4 max-w-4xl font-serif text-5xl font-semibold leading-[1.08] sm:text-7xl">
+        <h1 className="mx-auto mt-4 max-w-4xl font-serif text-4xl font-semibold leading-[1.08] sm:text-6xl">
           Stories, essays, and ideas <span className="italic">from your classmates.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">

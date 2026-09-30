@@ -67,8 +67,8 @@ function AuthPage() {
 
   if (!accountType) {
     return (
-      <main className="relative mx-auto flex max-w-2xl flex-col px-4 py-16">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
+      <main className="relative mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col px-4 py-16">
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-100 via-sky-50/70 to-sky-50/25 dark:from-sky-950/45 dark:via-sky-950/20 dark:to-sky-950/10" />
         <h1 className="font-serif text-3xl font-semibold tracking-tight">Welcome to ASD Literati</h1>
         <p className="mt-2 text-muted-foreground">Who are you signing in as?</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -90,10 +90,10 @@ function AuthPage() {
               key={type}
               type="button"
               onClick={() => setAccountType(type)}
-              className="group flex flex-col items-start rounded-xl border bg-card p-6 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group flex flex-col items-start rounded-xl border bg-card/95 p-6 text-left shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-sky-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
             >
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Icon className="h-6 w-6 text-primary" />
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-500/10">
+                <Icon className="h-6 w-6 text-sky-600 dark:text-sky-400" />
               </span>
               <span className="mt-4 font-serif text-xl font-semibold">{title}</span>
               <span className="mt-1 text-sm text-muted-foreground">{desc}</span>
@@ -107,8 +107,8 @@ function AuthPage() {
   const Icon = accountType === "teacher" ? School : GraduationCap;
 
   return (
-    <main className="relative mx-auto flex max-w-md flex-col px-4 py-16">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
+    <main className="relative mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-md flex-col px-4 py-16">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-100 via-sky-50/70 to-sky-50/25 dark:from-sky-950/45 dark:via-sky-950/20 dark:to-sky-950/10" />
       <Button
         variant="ghost"
         size="sm"
@@ -118,10 +118,10 @@ function AuthPage() {
         <ChevronLeft className="mr-1 h-4 w-4" />
         Back
       </Button>
-      <Card className="shadow-md">
+      <Card className="border-sky-200/70 shadow-md dark:border-sky-900/50">
         <CardHeader className="items-center text-center">
-          <span className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-            <Icon className="h-7 w-7 text-primary" />
+          <span className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-sky-500/10">
+            <Icon className="h-7 w-7 text-sky-600 dark:text-sky-400" />
           </span>
           <CardTitle className="font-serif text-2xl">
             {accountType === "teacher" ? "Teacher access" : "Student access"}
@@ -248,7 +248,7 @@ function SignIn() {
         <p className="mt-1 text-xs text-muted-foreground">Passwords are case-sensitive.</p>
       </div>
 
-      <Button type="submit" className="w-full" disabled={busy}>
+      <Button type="submit" className="w-full bg-none bg-sky-600 text-white shadow-md hover:bg-sky-700 hover:shadow-lg" disabled={busy}>
         {busy ? "Signing in…" : "Sign in"}
       </Button>
     </form>
@@ -408,7 +408,7 @@ function SignUp({ accountType }: { accountType: AccountType }) {
       ) : (
         <div>
           <Label htmlFor="su-admin-key" className="flex items-center gap-1.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+            <ShieldCheck className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" />
             Admin Key
           </Label>
           <PasswordInput
@@ -424,7 +424,7 @@ function SignUp({ accountType }: { accountType: AccountType }) {
         </div>
       )}
 
-      <Button type="submit" className="w-full" disabled={busy}>
+      <Button type="submit" className="w-full bg-none bg-sky-600 text-white shadow-md hover:bg-sky-700 hover:shadow-lg" disabled={busy}>
         {busy ? "Creating…" : "Create account"}
       </Button>
     </form>

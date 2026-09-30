@@ -58,10 +58,15 @@ function Dashboard() {
     <main className="mx-auto max-w-5xl px-4 py-10">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-serif text-4xl font-semibold sm:text-5xl">Dashboard</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Welcome back, {profile?.username}. Role:{" "}
+          <h1 className="font-serif text-3xl font-semibold sm:text-4xl">Dashboard</h1>
+          <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+            <span>Welcome back, {profile?.full_name}. Role:</span>
             <Badge variant="secondary">{profile?.role}</Badge>
+            {profile?.is_teacher ? (
+              <Badge variant="outline">Teacher</Badge>
+            ) : (
+              <span>· Grade {profile?.grade} · Section {profile?.section}</span>
+            )}
           </p>
         </div>
         {isPoster ? (

@@ -185,7 +185,10 @@ export function Header() {
                 <DropdownMenuLabel>
                   <div className="text-sm font-medium">{profile?.full_name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {profile?.role} · Grade {profile?.grade} · Section {profile?.section}
+                    {profile?.role}
+                    {profile?.is_teacher
+                      ? " · Teacher"
+                      : ` · Grade ${profile?.grade} · Section ${profile?.section}`}
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
