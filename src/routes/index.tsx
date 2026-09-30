@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PenLine, Search } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
@@ -31,30 +31,39 @@ function Index() {
   const [author, setAuthor] = useState("");
   const [fetching, setFetching] = useState(false);
 
+  const loadPosts = useCallback(async () => {
+    setFetching(true);
+    const { data } = await supabase
+      .from("posts")
+      .select(
+        `*, author:profiles!posts_author_id_fkey(id,username),
+         view_perms:post_view_permissions(grade,section),
+         comment_count:comments(count)`,
+      )
+      .order("created_at", { ascending: false })
+      .limit(50);
+    const list = (data ?? []).map((p: any) => ({
+      ...p,
+      view_grades: [...new Set((p.view_perms ?? []).map((v: any) => v.grade))],
+      view_sections: [...new Set((p.view_perms ?? []).map((v: any) => v.section))],
+      comment_count: p.comment_count?.[0]?.count ?? 0,
+    })) as Post[];
+    setPosts(list);
+    setFetching(false);
+  }, []);
+
   useEffect(() => {
     if (loading) return;
     if (!userId) return;
-    setFetching(true);
-    (async () => {
-      const { data } = await supabase
-        .from("posts")
-        .select(
-          `*, author:profiles!posts_author_id_fkey(id,username),
-           view_perms:post_view_permissions(grade,section),
-           comment_count:comments(count)`,
-        )
-        .order("created_at", { ascending: false })
-        .limit(50);
-      const list = (data ?? []).map((p: any) => ({
-        ...p,
-        view_grades: [...new Set((p.view_perms ?? []).map((v: any) => v.grade))],
-        view_sections: [...new Set((p.view_perms ?? []).map((v: any) => v.section))],
-        comment_count: p.comment_count?.[0]?.count ?? 0,
-      })) as Post[];
-      setPosts(list);
-      setFetching(false);
-    })();
-  }, [userId, loading]);
+    loadPosts();
+    const channel = supabase
+      .channel("posts-feed")
+      .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, () => loadPosts())
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId, loading, loadPosts]);
 
   const filtered = useMemo(() => {
     return posts.filter((p) => {
