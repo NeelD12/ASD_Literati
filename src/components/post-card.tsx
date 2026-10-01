@@ -35,7 +35,7 @@ export function PostCard({ post }: { post: Post }) {
           {post.title}
         </h2>
         <p className="text-[15px] leading-relaxed text-muted-foreground">{excerpt(post.content)}</p>
-        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-sm text-muted-foreground">
+        <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 micro text-sm">
           <span className="flex items-center gap-1.5"><Eye className="h-3 w-3" /> {post.view_count ?? 0}</span>
           <span className="flex items-center gap-1.5"><MessageSquare className="h-3 w-3" /> {post.comment_count ?? 0}</span>
           {post.view_grades?.length ? <GradeBadges grades={post.view_grades} /> : null}
