@@ -13,12 +13,12 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "ASD Literati | Student Literary Review" },
+      { title: "ASD Literati BLOG | School Literary Blog" },
       {
         name: "description",
         content: "Read essays, stories, and ideas from ASD Literati's student writers.",
       },
-      { property: "og:title", content: "ASD Literati | Student Literary Review" },
+      { property: "og:title", content: "ASD Literati BLOG | School Literary Blog" },
       {
         property: "og:description",
         content: "Read essays, stories, and ideas from ASD Literati's student writers.",
@@ -98,7 +98,7 @@ function Index() {
         </div>
         <div className="mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
           <img src={asdLogo} alt="Ambassador School Dubai" className="h-24 w-24 drop-shadow-md" />
-          <p className="eyebrow mt-6">Volume I · A Student Literary Review</p>
+          <p className="eyebrow mt-6">Volume I</p>
           <h1 className="mt-3 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">
             ASD Literati
           </h1>
@@ -143,7 +143,7 @@ function Index() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="mb-8">
-        <p className="eyebrow">Volume I · A Student Literary Review</p>
+        <p className="eyebrow">Volume I</p>
         <h1 className="mt-1.5 font-serif text-2xl font-semibold sm:text-3xl">
           Latest from your classmates
         </h1>
