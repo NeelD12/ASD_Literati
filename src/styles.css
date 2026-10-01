@@ -45,7 +45,7 @@
 }
 
 :root {
-  --radius: 0.9rem;
+  --radius: 0px;
   /* Off-white paper, ink black, restrained grayscale */
   --background: oklch(0.978 0.002 90);
   --foreground: oklch(0.17 0.004 90);
@@ -261,3 +261,6 @@
 }
 .prose-article a { color: var(--color-primary); text-decoration: underline; }
 .prose-article img { max-width: 100%; border-radius: var(--radius); margin: 1.2em 0; }
+
+/* Sharp edges everywhere */
+*, *::before, *::after { border-radius: 0 !important; }
