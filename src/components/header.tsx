@@ -120,7 +120,7 @@ function NotificationBell() {
                       {n.title}
                     </div>
                     <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{n.body}</div>
-                    <div className="mt-1 text-[11px] text-muted-foreground/70">
+                    <div className="micro mt-1">
                       {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                     </div>
                   </div>
