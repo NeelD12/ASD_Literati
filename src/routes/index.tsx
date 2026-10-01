@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BookOpen, GraduationCap, PenLine, School, Search } from "lucide-react";
+import { GraduationCap, PenLine, School, Search } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import type { Post } from "@/lib/types";
 import { PostCard } from "@/components/post-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import asdLogo from "@/assets/asd-logo.png";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -87,11 +88,16 @@ function Index() {
     if (loading) return null;
     return (
       <main className="relative">
-        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200 via-sky-100 to-sky-50 dark:from-sky-950 dark:via-sky-900 dark:to-sky-950" />
+        {/* Layered glow backdrop: sky-blue base with soft gold and green
+            accent blobs, echoing the school's own palette — not a flat tint. */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-sky-50 dark:bg-slate-950">
+          <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-sky-300/60 blur-[110px] dark:bg-sky-700/30" />
+          <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-amber-200/60 blur-[110px] dark:bg-amber-500/15" />
+          <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-emerald-200/50 blur-[120px] dark:bg-emerald-600/15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-50/40 to-sky-50/80 dark:via-slate-950/40 dark:to-slate-950/85" />
+        </div>
         <div className="mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
-          <span className="flex h-20 w-20 items-center justify-center rounded-full bg-sky-500/10 shadow-sm">
-            <BookOpen className="h-9 w-9 text-sky-600 dark:text-sky-400" />
-          </span>
+          <img src={asdLogo} alt="Ambassador School Dubai" className="h-24 w-24 drop-shadow-md" />
           <p className="eyebrow mt-6">Volume I · A Student Literary Review</p>
           <h1 className="mt-3 font-serif text-4xl font-semibold tracking-tight sm:text-5xl">
             ASD Literati

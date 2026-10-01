@@ -26,14 +26,22 @@ const authSearchSchema = z.object({
 export const Route = createFileRoute("/auth")({
   ssr: false,
   validateSearch: authSearchSchema,
-  head: () => ({ meta: [
-    { title: "Sign In | ASD Literati" },
-    { name: "description", content: "Sign in or create an ASD Literati student or teacher account." },
-    { property: "og:title", content: "Sign In | ASD Literati" },
-    { property: "og:description", content: "Sign in or create an ASD Literati student or teacher account." },
-    { property: "og:type", content: "website" },
-    { name: "twitter:card", content: "summary" },
-  ] }),
+  head: () => ({
+    meta: [
+      { title: "Sign In | ASD Literati" },
+      {
+        name: "description",
+        content: "Sign in or create an ASD Literati student or teacher account.",
+      },
+      { property: "og:title", content: "Sign In | ASD Literati" },
+      {
+        property: "og:description",
+        content: "Sign in or create an ASD Literati student or teacher account.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: AuthPage,
 });
 
@@ -81,11 +89,18 @@ function AuthPage() {
   if (!accountType) {
     return (
       <main className="relative mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col px-4 py-16">
-        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200 via-sky-100 to-sky-50 dark:from-sky-950 dark:via-sky-900 dark:to-sky-950" />
-        <h1 className="font-serif text-3xl font-semibold tracking-tight">Welcome to ASD Literati</h1>
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-sky-50 dark:bg-slate-950">
+          <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-sky-300/60 blur-[110px] dark:bg-sky-700/30" />
+          <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-amber-200/60 blur-[110px] dark:bg-amber-500/15" />
+          <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-emerald-200/50 blur-[120px] dark:bg-emerald-600/15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-50/40 to-sky-50/80 dark:via-slate-950/40 dark:to-slate-950/85" />
+        </div>
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">
+          Welcome to ASD Literati
+        </h1>
         <p className="mt-2 text-muted-foreground">Who are you signing in as?</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {([
+          {[
             {
               type: "student" as AccountType,
               icon: GraduationCap,
@@ -98,7 +113,7 @@ function AuthPage() {
               title: "Teacher",
               desc: "Publish posts, attach PDFs, and control who can read and comment.",
             },
-          ]).map(({ type, icon: Icon, title, desc }) => (
+          ].map(({ type, icon: Icon, title, desc }) => (
             <button
               key={type}
               type="button"
@@ -121,7 +136,12 @@ function AuthPage() {
 
   return (
     <main className="relative mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-md flex-col px-4 py-16">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200 via-sky-100 to-sky-50 dark:from-sky-950 dark:via-sky-900 dark:to-sky-950" />
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-sky-50 dark:bg-slate-950">
+        <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-sky-300/60 blur-[110px] dark:bg-sky-700/30" />
+        <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-amber-200/60 blur-[110px] dark:bg-amber-500/15" />
+        <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-emerald-200/50 blur-[120px] dark:bg-emerald-600/15" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-50/40 to-sky-50/80 dark:via-slate-950/40 dark:to-slate-950/85" />
+      </div>
       <Button
         variant="ghost"
         size="sm"
@@ -146,8 +166,12 @@ function AuthPage() {
               <TabsTrigger value="signin">Sign in</TabsTrigger>
               <TabsTrigger value="signup">Create account</TabsTrigger>
             </TabsList>
-            <TabsContent value="signin"><SignIn /></TabsContent>
-            <TabsContent value="signup"><SignUp accountType={accountType} /></TabsContent>
+            <TabsContent value="signin">
+              <SignIn />
+            </TabsContent>
+            <TabsContent value="signup">
+              <SignUp accountType={accountType} />
+            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
@@ -248,7 +272,13 @@ function SignIn() {
     <form onSubmit={submit} className="mt-4 space-y-3">
       <div>
         <Label htmlFor="full-name">Full Name</Label>
-        <Input id="full-name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+        <Input
+          id="full-name"
+          autoComplete="name"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          required
+        />
       </div>
       <div>
         <Label htmlFor="password">Password</Label>
@@ -261,7 +291,11 @@ function SignIn() {
         <p className="mt-1 text-xs text-muted-foreground">Passwords are case-sensitive.</p>
       </div>
 
-      <Button type="submit" className="w-full bg-none bg-sky-600 text-white shadow-md hover:bg-sky-700 hover:shadow-lg" disabled={busy}>
+      <Button
+        type="submit"
+        className="w-full bg-none bg-sky-600 text-white shadow-md hover:bg-sky-700 hover:shadow-lg"
+        disabled={busy}
+      >
         {busy ? "Signing in…" : "Sign in"}
       </Button>
     </form>
@@ -283,16 +317,19 @@ function SignUp({ accountType }: { accountType: AccountType }) {
     e.preventDefault();
     const cleanFullName = fullName.trim();
     const slug = slugifyFullName(cleanFullName);
-    if (cleanFullName.length < 2 || cleanFullName.length > 50) return toast.error("Full name must be 2–50 characters");
+    if (cleanFullName.length < 2 || cleanFullName.length > 50)
+      return toast.error("Full name must be 2–50 characters");
     if (slug.length < 2) return toast.error("Enter a valid name");
     if (password.length < 6) return toast.error("Password must be 6+ characters");
-    if (accountType === "student" && schoolIdDigits.length !== 7) return toast.error("Enter your full 7-digit School ID");
+    if (accountType === "student" && schoolIdDigits.length !== 7)
+      return toast.error("Enter your full 7-digit School ID");
     if (accountType === "student") {
       if (!gender) return toast.error("Select a gender");
       const ageNum = Number(age);
-      if (!age || !Number.isInteger(ageNum) || ageNum < 3 || ageNum > 25) return toast.error("Enter a valid age");
+      if (!age || !Number.isInteger(ageNum) || ageNum < 3 || ageNum > 25)
+        return toast.error("Enter a valid age");
     }
-        if (accountType === "teacher" && adminKey.trim().length === 0)
+    if (accountType === "teacher" && adminKey.trim().length === 0)
       return toast.error("Enter the Admin Key");
 
     const { count: nameCount } = await supabase
@@ -300,7 +337,9 @@ function SignUp({ accountType }: { accountType: AccountType }) {
       .select("id", { count: "exact", head: true })
       .eq("username", slug);
     if ((nameCount ?? 0) > 0) {
-      return toast.error("An account already exists with this name — try adding a middle name, or sign in instead");
+      return toast.error(
+        "An account already exists with this name — try adding a middle name, or sign in instead",
+      );
     }
     if (accountType === "student") {
       const { count: idCount } = await supabase
@@ -334,7 +373,9 @@ function SignUp({ accountType }: { accountType: AccountType }) {
     if (error) {
       const msg = error.message || "";
       if (msg.includes("already registered") || msg.includes("already been registered")) {
-        toast.error("An account already exists with this name — try adding a middle name, or sign in instead");
+        toast.error(
+          "An account already exists with this name — try adding a middle name, or sign in instead",
+        );
       } else if (msg.includes("school_id")) {
         toast.error("This School ID is already registered to another account");
       } else if (msg.includes("Invalid admin key")) {
@@ -342,14 +383,16 @@ function SignUp({ accountType }: { accountType: AccountType }) {
       } else if (msg.includes("full_name")) {
         toast.error("Full name must be 2–50 characters");
       } else {
-        toast.error("Couldn't create your account — double-check your details (name, School ID, or Admin Key) and try again");
+        toast.error(
+          "Couldn't create your account — double-check your details (name, School ID, or Admin Key) and try again",
+        );
       }
       return;
     }
     toast.success(
       accountType === "teacher"
         ? "Teacher account created and verified."
-        : "Account created — you're signed in."
+        : "Account created — you're signed in.",
     );
   }
 
@@ -357,7 +400,14 @@ function SignUp({ accountType }: { accountType: AccountType }) {
     <form onSubmit={submit} className="mt-4 space-y-3">
       <div>
         <Label htmlFor="su-full-name">Full Name</Label>
-        <Input id="su-full-name" autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} maxLength={50} required />
+        <Input
+          id="su-full-name"
+          autoComplete="name"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          maxLength={50}
+          required
+        />
         <p className="mt-1 text-xs text-muted-foreground">This is also how you'll sign in.</p>
       </div>
       {accountType === "student" ? (
@@ -388,25 +438,39 @@ function SignUp({ accountType }: { accountType: AccountType }) {
           <div>
             <Label>Grade level</Label>
             <Select value={grade} onValueChange={(v) => setGrade(v as Grade)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                {GRADES.map((g) => <SelectItem key={g} value={g}>Grade {g}</SelectItem>)}
+                {GRADES.map((g) => (
+                  <SelectItem key={g} value={g}>
+                    Grade {g}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label>Section</Label>
             <Select value={section} onValueChange={(v) => setSection(v as Section)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                {SECTIONS.map((s) => <SelectItem key={s} value={s}>Section {s}</SelectItem>)}
+                {SECTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    Section {s}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           <div>
             <Label>Gender</Label>
             <Select value={gender} onValueChange={(v) => setGender(v as "Male" | "Female")}>
-              <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Male">Male</SelectItem>
                 <SelectItem value="Female">Female</SelectItem>
@@ -415,7 +479,15 @@ function SignUp({ accountType }: { accountType: AccountType }) {
           </div>
           <div>
             <Label htmlFor="su-age">Age</Label>
-            <Input id="su-age" type="number" min={3} max={25} value={age} onChange={(e) => setAge(e.target.value)} required />
+            <Input
+              id="su-age"
+              type="number"
+              min={3}
+              max={25}
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              required
+            />
           </div>
         </div>
       ) : (
@@ -431,13 +503,17 @@ function SignUp({ accountType }: { accountType: AccountType }) {
             onChange={setAdminKey}
           />
           <p className="mt-1 text-xs text-muted-foreground">
-            Verifies you as a teacher and lets you see and comment on every post. Posting
-            access is a separate key you redeem afterward in Settings.
+            Verifies you as a teacher and lets you see and comment on every post. Posting access is
+            a separate key you redeem afterward in Settings.
           </p>
         </div>
       )}
 
-      <Button type="submit" className="w-full bg-none bg-sky-600 text-white shadow-md hover:bg-sky-700 hover:shadow-lg" disabled={busy}>
+      <Button
+        type="submit"
+        className="w-full bg-none bg-sky-600 text-white shadow-md hover:bg-sky-700 hover:shadow-lg"
+        disabled={busy}
+      >
         {busy ? "Creating…" : "Create account"}
       </Button>
     </form>
