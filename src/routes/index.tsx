@@ -156,7 +156,7 @@ function Index() {
               <p className="eyebrow">For contributors</p>
               <h2 className="mt-1.5 font-serif text-2xl font-semibold">Ready to publish?</h2>
               <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                Rich text editor, PDF attachments, per-grade read and comment access, and a comment
+                Rich text editor, file attachments, per-grade read and comment access, and a comment
                 time gap — all in one place.
               </p>
             </div>

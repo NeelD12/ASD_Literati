@@ -111,7 +111,7 @@ function AuthPage() {
               type: "teacher" as AccountType,
               icon: School,
               title: "Teacher",
-              desc: "Publish posts, attach PDFs, and control who can read and comment.",
+              desc: "Publish posts, attach files, and control who can read and comment.",
             },
           ].map(({ type, icon: Icon, title, desc }) => (
             <button

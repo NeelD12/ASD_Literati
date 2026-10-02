@@ -29,10 +29,6 @@ export function PdfUpload({ userId, files, onChange }: Props) {
     if (!list || !userId) return;
     const incoming = Array.from(list);
     const accepted = incoming.filter((f) => {
-      if (f.type !== "application/pdf" && !f.name.toLowerCase().endsWith(".pdf")) {
-        toast.error(`${f.name} isn't a PDF.`);
-        return false;
-      }
       if (f.size > MAX_BYTES) {
         toast.error(`${f.name} is larger than 25 MB.`);
         return false;
@@ -45,16 +41,17 @@ export function PdfUpload({ userId, files, onChange }: Props) {
     const uploaded: Attachment[] = [];
     for (const file of accepted) {
       const path = `${userId}/${crypto.randomUUID()}-${file.name.replace(/[^\w.\-]+/g, "_")}`;
-      const { error } = await supabase.storage
-        .from("post-files")
-        .upload(path, file, { contentType: "application/pdf", upsert: false });
+      const { error } = await supabase.storage.from("post-files").upload(path, file, {
+        contentType: file.type || "application/octet-stream",
+        upsert: false,
+      });
       if (error) toast.error(`${file.name}: ${error.message}`);
-      else uploaded.push({ name: file.name, path, size: file.size });
+      else uploaded.push({ name: file.name, path, size: file.size, type: file.type || "" });
     }
     setUploading((u) => u.filter((n) => !accepted.some((f) => f.name === n)));
     if (uploaded.length) {
       onChange([...files, ...uploaded]);
-      toast.success(`${uploaded.length} PDF${uploaded.length > 1 ? "s" : ""} attached`);
+      toast.success(`${uploaded.length} file${uploaded.length > 1 ? "s" : ""} attached`);
     }
   }
 
@@ -89,15 +86,18 @@ export function PdfUpload({ userId, files, onChange }: Props) {
             : "border-border bg-muted/30 hover:border-primary/50 hover:bg-muted/60",
         )}
       >
-        <UploadCloud className={cn("h-8 w-8", dragging ? "text-primary" : "text-muted-foreground")} />
+        <UploadCloud
+          className={cn("h-8 w-8", dragging ? "text-primary" : "text-muted-foreground")}
+        />
         <p className="text-sm font-medium">
-          Drag your PDFs here, or <span className="text-primary underline">browse</span>
+          Drag your files here, or <span className="text-primary underline">browse</span>
         </p>
-        <p className="text-xs text-muted-foreground">PDF only · up to 25 MB each · multiple files allowed</p>
+        <p className="text-xs text-muted-foreground">
+          Any file type (PDF, Word, images, etc.) · up to 25 MB each · multiple files allowed
+        </p>
         <input
           ref={inputRef}
           type="file"
-          accept="application/pdf,.pdf"
           multiple
           className="hidden"
           onChange={(e) => {
@@ -124,7 +124,10 @@ export function PdfUpload({ userId, files, onChange }: Props) {
       {files.length > 0 ? (
         <ul className="space-y-2">
           {files.map((f) => (
-            <li key={f.path} className="flex items-center gap-3 rounded-lg border bg-card px-3 py-2">
+            <li
+              key={f.path}
+              className="flex items-center gap-3 rounded-lg border bg-card px-3 py-2"
+            >
               <FileText className="h-5 w-5 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{f.name}</p>

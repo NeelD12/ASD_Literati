@@ -9,7 +9,9 @@ export interface Attachment {
   name: string;
   path: string;
   size: number;
-  [key: string]: string | number;
+  /** MIME type, when known — used to decide whether an inline preview is possible. */
+  type?: string;
+  [key: string]: string | number | undefined;
 }
 
 export interface Profile {

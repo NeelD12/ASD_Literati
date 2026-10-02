@@ -142,7 +142,7 @@ function EditPage() {
         </section>
 
         <section className="space-y-3 rounded-xl border bg-card p-5">
-          <h2 className="font-serif text-xl font-semibold">2. PDFs</h2>
+          <h2 className="font-serif text-xl font-semibold">2. Files</h2>
           <PdfUpload userId={userId} files={files} onChange={setFiles} />
         </section>
 

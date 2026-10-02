@@ -42,7 +42,7 @@ export function PostCard({ post }: { post: Post }) {
           {post.attachments?.length ? (
             <Badge variant="outline" className="gap-1 rounded-full font-normal">
               <FileText className="h-3 w-3" />
-              {post.attachments.length} PDF{post.attachments.length > 1 ? "s" : ""}
+              {post.attachments.length} file{post.attachments.length > 1 ? "s" : ""}
             </Badge>
           ) : null}
         </div>

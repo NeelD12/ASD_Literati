@@ -61,7 +61,7 @@ function CreatePage() {
       return;
     }
     if (!content.trim() && files.length === 0) {
-      toast.error("Add some content or attach at least one PDF.");
+      toast.error("Add some content or attach at least one file.");
       return;
     }
     if (viewGrades.length === 0) {
@@ -115,7 +115,7 @@ function CreatePage() {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="font-serif text-3xl font-semibold">New post</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Attach PDFs, choose who can read and who can comment. You can edit all of this later.
+        Attach files, choose who can read and who can comment. You can edit all of this later.
       </p>
 
       <div className="mt-8 space-y-8">
@@ -148,9 +148,9 @@ function CreatePage() {
         </section>
 
         <section className="space-y-3 rounded-xl border bg-card p-5">
-          <h2 className="font-serif text-xl font-semibold">2. Upload PDFs</h2>
+          <h2 className="font-serif text-xl font-semibold">2. Upload files</h2>
           <p className="text-sm text-muted-foreground">
-            Readers can preview each PDF right on the page, or download it.
+            Readers can preview supported files (PDFs, images) right on the page, or download any file.
           </p>
           <PdfUpload userId={userId} files={files} onChange={setFiles} />
         </section>
