@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
+import asdLogo from "@/assets/asd-logo.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -119,7 +120,7 @@ function NotificationBell() {
                       {n.title}
                     </div>
                     <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{n.body}</div>
-                    <div className="mt-1 text-[11px] text-muted-foreground/70">
+                    <div className="micro mt-1">
                       {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                     </div>
                   </div>
@@ -141,11 +142,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/90 shadow-sm backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 sm:py-4">
-        <Link to="/" className="group flex items-baseline gap-2">
-          <span className="font-serif text-2xl font-semibold sm:text-3xl">
-            ASD <span className="italic">Literati</span>
+        <Link to="/" className="group flex min-w-0 items-center gap-2.5 sm:gap-3">
+          <img src={asdLogo} alt="ASD school logo" className="h-9 w-9 shrink-0 rounded-full object-contain sm:h-11 sm:w-11" />
+          <span className="truncate font-serif text-xl font-semibold sm:text-3xl">
+            ASD <span className="italic">Literati</span>{" "}
+            <span className="font-sans text-xs font-bold tracking-[0.2em] text-primary align-middle sm:text-sm">BLOG</span>
           </span>
-          <span className="hidden eyebrow sm:inline">Student Literary Review</span>
         </Link>
 
         <div className="flex items-center gap-2">

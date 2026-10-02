@@ -189,12 +189,15 @@ function PostPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <main className="relative mx-auto max-w-4xl px-3 py-8 sm:px-6 sm:py-14">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 mx-auto h-72 max-w-3xl rounded-full bg-highlight/40 blur-3xl" />
+      <div className="glass-window overflow-hidden">
       <article>
         {post.cover_image ? (
-          <img src={post.cover_image} alt="" className="mb-10 aspect-[16/8] w-full object-cover" />
+          <img src={post.cover_image} alt="" className="aspect-[16/8] w-full object-cover" />
         ) : null}
 
+        <div className="px-5 pt-8 sm:px-12 sm:pt-12">
         <header className="mb-10 border-b pb-8 text-center sm:text-left">
           <p className="eyebrow">Essay</p>
           <h1 className="mt-3 font-serif text-3xl font-semibold leading-[1.15] sm:text-5xl">
@@ -255,10 +258,12 @@ function PostPage() {
         </header>
 
         {post.content ? (
-          <div className="prose-article" dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className="prose-article break-words" dangerouslySetInnerHTML={{ __html: post.content }} />
         ) : null}
+        </div>
       </article>
 
+      <div className="px-5 pb-10 sm:px-12 sm:pb-12">
       <PdfList files={attachments} />
 
       {isAuthor ? <CommentCodePanel postId={post.id} /> : null}
@@ -270,6 +275,8 @@ function PostPage() {
         cooldownSeconds={cooldown}
         needsCode={needsCode}
       />
+      </div>
+      </div>
     </main>
   );
 }

@@ -122,7 +122,7 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
   const tree = nest(comments);
 
   return (
-    <section className="mt-10">
+    <section className="mt-12 border-t pt-10">
       <h3 className="font-serif text-2xl font-semibold">
         Comments <span className="text-muted-foreground">({comments.length})</span>
       </h3>
@@ -135,7 +135,7 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
       ) : null}
 
       {canComment ? (
-        <div className="mt-4 space-y-2">
+        <div className="mt-5 space-y-3 rounded-2xl border bg-background/60 p-4 focus-within:border-primary/50">
           {needsCode ? (
             <div>
               <label htmlFor="comment-code" className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -172,16 +172,16 @@ export function Comments({ postId, postAuthorId, canComment, cooldownSeconds = 0
           </div>
         </div>
       ) : userId ? (
-        <p className="mt-4 rounded-md border bg-muted/50 p-3 text-sm text-muted-foreground">
+        <p className="mt-4 rounded-2xl border bg-accent/50 p-4 text-sm text-muted-foreground">
           Commenting on this post isn't open to your grade level.
         </p>
       ) : (
-        <p className="mt-4 rounded-md border bg-muted/50 p-3 text-sm text-muted-foreground">
+        <p className="mt-4 rounded-2xl border bg-accent/50 p-4 text-sm text-muted-foreground">
           Sign in to join the conversation.
         </p>
       )}
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-8 space-y-6">
         {loading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : tree.length === 0 ? (
@@ -275,15 +275,29 @@ function CommentItem({
     }
   }
 
+  const initials = (node.author?.full_name ?? "?").split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const isOp = node.author_id === postAuthorId;
+
   return (
-    <div className={depth > 0 ? "ml-6 border-l pl-4" : ""}>
-      <div className="rounded-lg border bg-card p-4">
-        <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{node.author?.full_name ?? "Anonymous"}</span>
-          <span>{formatDistanceToNow(new Date(node.created_at), { addSuffix: true })}</span>
+    <div className={depth > 0 ? "relative pl-5 sm:pl-8" : "relative"}>
+      {depth > 0 ? (
+        <span aria-hidden className="absolute left-0 top-0 h-6 w-4 rounded-bl-xl border-b-2 border-l-2 border-primary/25 sm:w-6" />
+      ) : null}
+      <div className="flex gap-3">
+        <div className="flex flex-col items-center">
+          <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${isOp ? "bg-highlight text-highlight-foreground" : "bg-brand-soft text-accent-foreground"}`}>
+            {initials}
+          </span>
+          {node.children.length > 0 ? <span aria-hidden className="mt-1 w-0.5 flex-1 rounded-full bg-primary/20" /> : null}
+        </div>
+        <div className="min-w-0 flex-1 pb-2">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+          <span className="text-sm font-semibold text-foreground">{node.author?.full_name ?? "Anonymous"}</span>
+          {isOp ? <span className="micro rounded-full bg-highlight px-2 py-0.5 text-highlight-foreground">Author</span> : null}
+          <span className="micro">· {formatDistanceToNow(new Date(node.created_at), { addSuffix: true })}</span>
         </div>
         {editing ? (
-          <div className="space-y-2">
+          <div className="mt-2 space-y-2">
             <Textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} />
             <div className="flex gap-2">
               <Button size="sm" onClick={save}>Save</Button>
@@ -291,29 +305,29 @@ function CommentItem({
             </div>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap text-sm leading-relaxed">{node.content}</p>
+          <p className="mt-1 whitespace-pre-wrap break-words text-[15px] leading-relaxed">{node.content}</p>
         )}
         {!editing ? (
-          <div className="mt-2 flex gap-2">
+          <div className="-ml-2 mt-1 flex flex-wrap gap-1">
             {canComment && userId ? (
-              <Button size="sm" variant="ghost" onClick={() => setReplyOpen((v) => !v)}>
+              <Button size="sm" variant="ghost" className="h-8 rounded-full text-primary hover:bg-accent" onClick={() => setReplyOpen((v) => !v)}>
                 <Reply className="mr-1 h-3 w-3" /> Reply
               </Button>
             ) : null}
             {canEdit ? (
-              <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
+              <Button size="sm" variant="ghost" className="h-8 rounded-full text-muted-foreground" onClick={() => setEditing(true)}>
                 <Pencil className="mr-1 h-3 w-3" /> Edit
               </Button>
             ) : null}
             {canDelete ? (
-              <Button size="sm" variant="ghost" className="text-destructive" onClick={remove}>
+              <Button size="sm" variant="ghost" className="h-8 rounded-full text-destructive hover:bg-destructive/10" onClick={remove}>
                 <Trash2 className="mr-1 h-3 w-3" /> Delete
               </Button>
             ) : null}
           </div>
         ) : null}
         {replyOpen ? (
-          <div className="mt-3 space-y-2">
+          <div className="mt-2 space-y-2 rounded-2xl border border-primary/20 bg-background/60 p-3">
             {needsCode ? (
               <Input
                 value={replyCode}
@@ -323,14 +337,13 @@ function CommentItem({
                 className="max-w-[10rem] font-mono tracking-widest"
               />
             ) : null}
-            <Textarea value={reply} onChange={(e) => setReply(e.target.value)} rows={2} placeholder="Write a reply…" />
-            <div className="flex gap-2">
-              <Button size="sm" onClick={postReply}>Reply</Button>
+            <Textarea value={reply} onChange={(e) => setReply(e.target.value)} rows={2} placeholder={`Reply to ${node.author?.full_name ?? "this comment"}…`} />
+            <div className="flex justify-end gap-2">
               <Button size="sm" variant="ghost" onClick={() => setReplyOpen(false)}>Cancel</Button>
+              <Button size="sm" onClick={postReply}>Reply</Button>
             </div>
           </div>
         ) : null}
-      </div>
       {node.children.length > 0 ? (
         <div className="mt-3 space-y-3">
           {node.children.map((child) => (
@@ -347,6 +360,8 @@ function CommentItem({
           ))}
         </div>
       ) : null}
+        </div>
+      </div>
     </div>
   );
 }
