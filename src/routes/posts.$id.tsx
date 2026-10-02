@@ -61,6 +61,7 @@ function CommentCodePanel({ postId }: { postId: string }) {
   }, [expiresAt]);
 
   async function generate() {
+    if (!confirm("This will notify all other teachers. Are you sure you want to generate the code?")) return;
     setBusy(true);
     const { data, error } = await supabase.rpc("generate_comment_code", { _post: postId });
     setBusy(false);
