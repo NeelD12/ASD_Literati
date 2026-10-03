@@ -39,7 +39,7 @@
   --color-brand-soft: var(--brand-soft);
   --font-serif: "Bodoni Moda", "Didot", ui-serif, Georgia, serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
-  --font-micro: "Bell Centennial", "Bell Centennial Std", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-micro: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-highlight: var(--highlight);
   --color-highlight-foreground: var(--highlight-foreground);
 }
@@ -264,3 +264,17 @@
 
 /* Sharp edges everywhere */
 *, *::before, *::after { border-radius: 0 !important; }
+
+/* The reading lightbox is deliberately softer than the site's square page chrome. */
+.pdf-viewer, .pdf-viewer iframe, .pdf-viewer img, .pdf-viewer button {
+  border-radius: 0.625rem !important;
+}
+.pdf-comments-panel {
+  border-radius: 0 0.625rem 0.625rem 0 !important;
+}
+@media (max-width: 1023px) {
+  .pdf-comments-panel { border-radius: 0 !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdf-comments-panel { transition: none !important; }
+}
