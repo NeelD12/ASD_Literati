@@ -166,7 +166,7 @@
 
 @utility eyebrow {
   font-family: var(--font-micro);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -175,7 +175,7 @@
 
 @utility micro {
   font-family: var(--font-micro);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   letter-spacing: 0.02em;
   color: var(--color-muted-foreground);
 }
@@ -201,7 +201,7 @@
   min-height: 320px;
   outline: none;
   font-family: var(--font-serif);
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.75;
 }
 .tiptap p { margin: 0 0 1em; }
@@ -236,7 +236,7 @@
 
 .prose-article {
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: 1.1875rem;
   line-height: 1.85;
   letter-spacing: 0.005em;
   color: var(--color-foreground);
