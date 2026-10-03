@@ -18,7 +18,7 @@
 
 ## Open
 
-- [ ] Redesign PDF previews as a large overlay with a collapsible, independently scrolling comments panel; keep the existing comments behavior and use Helvetica for micro text
+- [x] Redesign PDF previews as a large overlay with a collapsible, independently scrolling comments panel; keep the existing comments behavior and use Helvetica for micro text
 - [ ] Ambassador School logo in the header (and ideally the auth pages) —
       blocked on getting the actual logo file into the repo
 - [ ] Broader accessibility / color-contrast pass now that the palette has
