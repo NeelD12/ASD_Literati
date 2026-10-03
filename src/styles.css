@@ -39,13 +39,13 @@
   --color-brand-soft: var(--brand-soft);
   --font-serif: "Bodoni Moda", "Didot", ui-serif, Georgia, serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
-  --font-micro: "Bell Centennial", "Bell Centennial Std", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-micro: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-highlight: var(--highlight);
   --color-highlight-foreground: var(--highlight-foreground);
 }
 
 :root {
-  --radius: 0px;
+  --radius: 0.625rem;
   /* Off-white paper, ink black, restrained grayscale */
   --background: oklch(0.978 0.002 90);
   --foreground: oklch(0.17 0.004 90);
@@ -262,5 +262,14 @@
 .prose-article a { color: var(--color-primary); text-decoration: underline; }
 .prose-article img { max-width: 100%; border-radius: var(--radius); margin: 1.2em 0; }
 
-/* Sharp edges everywhere */
-*, *::before, *::after { border-radius: 0 !important; }
+/* The PDF lightbox and its side panel form a single elevated reading surface. */
+.pdf-viewer { border-radius: 1rem; }
+.pdf-comments-panel {
+  border-radius: 0 1rem 1rem 0;
+}
+@media (max-width: 1023px) {
+  .pdf-comments-panel { border-radius: 0 1rem 1rem 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdf-comments-panel { transition: none !important; }
+}

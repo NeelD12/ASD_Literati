@@ -15,6 +15,7 @@
       credit-metered hosting
 - [x] Sky-blue auth pages / warmer green app theme, consistent heading
       sizes, bottom-right credit widget
+- [x] Redesign PDF previews as a large overlay with a collapsible, independently scrolling comments panel; keep the existing comments behavior and use Helvetica for micro text
 
 ## Open
 
