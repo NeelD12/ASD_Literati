@@ -120,6 +120,11 @@
     border-color: var(--color-border);
   }
 
+  /* Readability: lift the whole type scale by raising the root font size. */
+  html {
+    font-size: 17.5px;
+  }
+
   body {
     background-color: var(--color-background);
     background-image: var(--page-gradient);
