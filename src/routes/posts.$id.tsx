@@ -264,8 +264,8 @@ function PostPage() {
       </article>
 
       <div className="px-5 pb-10 sm:px-12 sm:pb-12">
-      <PdfList files={attachments}>
       {isAuthor ? <CommentCodePanel postId={post.id} /> : null}
+      <PdfList files={attachments}>
       <Comments
         postId={post.id}
         postAuthorId={post.author_id}

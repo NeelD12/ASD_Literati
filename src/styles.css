@@ -45,7 +45,7 @@
 }
 
 :root {
-  --radius: 0px;
+  --radius: 0.625rem;
   /* Off-white paper, ink black, restrained grayscale */
   --background: oklch(0.978 0.002 90);
   --foreground: oklch(0.17 0.004 90);
@@ -262,18 +262,13 @@
 .prose-article a { color: var(--color-primary); text-decoration: underline; }
 .prose-article img { max-width: 100%; border-radius: var(--radius); margin: 1.2em 0; }
 
-/* Sharp edges everywhere */
-*, *::before, *::after { border-radius: 0 !important; }
-
-/* The reading lightbox is deliberately softer than the site's square page chrome. */
-.pdf-viewer, .pdf-viewer iframe, .pdf-viewer img, .pdf-viewer button {
-  border-radius: 0.625rem !important;
-}
+/* The PDF lightbox and its side panel form a single elevated reading surface. */
+.pdf-viewer { border-radius: 1rem; }
 .pdf-comments-panel {
-  border-radius: 0 0.625rem 0.625rem 0 !important;
+  border-radius: 0 1rem 1rem 0;
 }
 @media (max-width: 1023px) {
-  .pdf-comments-panel { border-radius: 0 !important; }
+  .pdf-comments-panel { border-radius: 0 1rem 1rem 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pdf-comments-panel { transition: none !important; }
