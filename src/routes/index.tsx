@@ -91,9 +91,9 @@ function Index() {
         {/* Layered glow backdrop: sky-blue base with soft gold and green
             accent blobs, echoing the school's own palette — not a flat tint. */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
-          <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-primary/15 blur-[110px] dark:bg-primary/10" />
-          <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-highlight/60 blur-[110px] dark:bg-highlight/20" />
-          <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-accent/50 blur-[120px] dark:bg-accent/20" />
+          <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-primary/15 blur-[110px] dark:bg-primary/20" />
+          <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-highlight/60 blur-[110px] dark:bg-highlight/35" />
+          <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-accent/50 blur-[120px] dark:bg-accent/30" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background/80 dark:via-background/30 dark:to-background/70" />
         </div>
         <div className="mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
