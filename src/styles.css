@@ -159,6 +159,25 @@
     opacity: 0.09;
   }
 
+  /* The school emblem as a large, softly blurred imprint behind the content. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("/asd-emblem-bg.png");
+    background-repeat: no-repeat;
+    background-position: center 42%;
+    background-size: min(72vmin, 620px) auto;
+    filter: blur(26px) saturate(1.05);
+    opacity: 0.14;
+  }
+
+  .dark body::after {
+    opacity: 0.16;
+  }
+
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     font-weight: 600;
