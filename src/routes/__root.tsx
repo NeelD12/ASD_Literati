@@ -144,7 +144,7 @@ function CreditWidget() {
       <PopoverContent align="end" side="top" className="w-64">
         <p className="font-serif text-base font-semibold">ASD Literati</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Developed by Neel Dhakan.
+          Developed by Neel Dhakan, Adityansu Pattanaik.
         </p>
       </PopoverContent>
     </Popover>
