@@ -144,9 +144,8 @@ export function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 sm:py-4">
         <Link to="/" className="group flex min-w-0 items-center gap-2.5 sm:gap-3">
           <img src={asdLogo} alt="ASD school logo" className="h-9 w-9 shrink-0 rounded-full object-contain sm:h-11 sm:w-11" />
-          <span className="truncate font-serif text-xl font-semibold sm:text-3xl">
-            ASD <span className="italic">Literati</span>{" "}
-            <span className="font-sans text-xs font-bold tracking-[0.2em] text-primary align-middle sm:text-sm">BLOG</span>
+          <span className="truncate font-serif text-xl font-semibold italic sm:text-3xl">
+            ASD Literati Blog
           </span>
         </Link>
 

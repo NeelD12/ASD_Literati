@@ -90,11 +90,11 @@ function Index() {
       <main className="relative">
         {/* Layered glow backdrop: sky-blue base with soft gold and green
             accent blobs, echoing the school's own palette — not a flat tint. */}
-        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-sky-50 dark:bg-slate-950">
-          <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-sky-300/60 blur-[110px] dark:bg-sky-700/30" />
-          <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-amber-200/60 blur-[110px] dark:bg-amber-500/15" />
-          <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-emerald-200/50 blur-[120px] dark:bg-emerald-600/15" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-50/40 to-sky-50/80 dark:via-slate-950/40 dark:to-slate-950/85" />
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-background">
+          <div className="absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full bg-primary/15 blur-[110px] dark:bg-primary/20" />
+          <div className="absolute -top-24 right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-highlight/60 blur-[110px] dark:bg-highlight/35" />
+          <div className="absolute bottom-[-14rem] left-1/4 h-[32rem] w-[32rem] rounded-full bg-accent/50 blur-[120px] dark:bg-accent/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background/80 dark:via-background/30 dark:to-background/70" />
         </div>
         <div className="mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
           <img src={asdLogo} alt="Ambassador School Dubai" className="h-24 w-24 drop-shadow-md" />
@@ -125,10 +125,10 @@ function Index() {
                 key={role}
                 to="/auth"
                 search={{ role }}
-                className="group flex flex-col items-start rounded-xl border bg-card/95 p-6 text-left shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-sky-400 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                className="group flex flex-col items-start rounded-xl border bg-card/95 p-6 text-left shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-500/10">
-                  <Icon className="h-6 w-6 text-sky-600 dark:text-sky-400" />
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <Icon className="h-6 w-6 text-primary" />
                 </span>
                 <span className="mt-4 font-serif text-xl font-semibold">{title}</span>
                 <span className="mt-1 text-sm text-muted-foreground">{desc}</span>

@@ -6,7 +6,7 @@
 
 /*
  * ASD Literati — editorial literary-magazine design system.
- * Off-white paper, Bodoni Moda display headings, Helvetica UI, grayscale only.
+ * Soft editorial surfaces, Bodoni Moda display headings, Helvetica UI.
  */
 
 @theme inline {
@@ -39,23 +39,23 @@
   --color-brand-soft: var(--brand-soft);
   --font-serif: "Bodoni Moda", "Didot", ui-serif, Georgia, serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
-  --font-micro: "Bell Centennial", "Bell Centennial Std", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-micro: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-highlight: var(--highlight);
   --color-highlight-foreground: var(--highlight-foreground);
 }
 
 :root {
   --radius: 0px;
-  /* Off-white paper, ink black, restrained grayscale */
+  /* Warm paper with richer ink and clearer blue accents. */
   --background: oklch(0.978 0.002 90);
-  --foreground: oklch(0.17 0.004 90);
+  --foreground: oklch(0.22 0.035 245);
   --card: oklch(0.995 0.001 90);
-  --card-foreground: oklch(0.17 0.004 90);
+  --card-foreground: oklch(0.22 0.035 245);
   --popover: oklch(0.995 0.001 90);
-  --popover-foreground: oklch(0.17 0.004 90);
-  --primary: oklch(0.52 0.11 240);
+  --popover-foreground: oklch(0.22 0.035 245);
+  --primary: oklch(0.46 0.15 245);
   --primary-foreground: oklch(0.99 0.005 240);
-  --brand-deep: oklch(0.44 0.1 245);
+  --brand-deep: oklch(0.40 0.14 245);
   --brand-soft: oklch(0.93 0.035 235);
   --highlight: oklch(0.9 0.07 60);
   --highlight-foreground: oklch(0.38 0.09 50);
@@ -70,9 +70,9 @@
     linear-gradient(165deg, oklch(0.975 0.012 70) 0%, oklch(0.965 0.018 230) 100%);
   --primary-gradient: linear-gradient(135deg, var(--brand-deep), oklch(0.62 0.1 230));
   --secondary: oklch(0.945 0.002 90);
-  --secondary-foreground: oklch(0.25 0.004 90);
+  --secondary-foreground: oklch(0.26 0.04 245);
   --muted: oklch(0.945 0.002 90);
-  --muted-foreground: oklch(0.50 0.004 90);
+  --muted-foreground: oklch(0.42 0.055 245);
   --accent: oklch(0.94 0.03 235);
   --accent-foreground: oklch(0.32 0.08 245);
   --destructive: oklch(0.51 0.16 27);
@@ -84,40 +84,55 @@
 }
 
 .dark {
-  --background: oklch(0.145 0.003 90);
-  --foreground: oklch(0.955 0.002 90);
-  --card: oklch(0.185 0.003 90);
-  --card-foreground: oklch(0.955 0.002 90);
-  --popover: oklch(0.185 0.003 90);
-  --popover-foreground: oklch(0.955 0.002 90);
-  --primary: oklch(0.78 0.09 235);
-  --primary-foreground: oklch(0.18 0.03 245);
-  --brand-deep: oklch(0.7 0.1 238);
-  --brand-soft: oklch(0.3 0.05 240);
-  --highlight: oklch(0.42 0.08 55);
-  --highlight-foreground: oklch(0.92 0.06 65);
-  --glass: oklch(0.2 0.01 240 / 72%);
+  --background: oklch(0.26 0.04 252);
+  --foreground: oklch(0.91 0.018 85);
+  --card: oklch(0.3 0.04 250);
+  --card-foreground: oklch(0.91 0.018 85);
+  --popover: oklch(0.3 0.04 250);
+  --popover-foreground: oklch(0.91 0.018 85);
+  --primary: oklch(0.8 0.105 225);
+  --primary-foreground: oklch(0.25 0.055 245);
+  --brand-deep: oklch(0.78 0.1 230);
+  --brand-soft: oklch(0.44 0.07 235);
+  --highlight: oklch(0.52 0.08 55);
+  --highlight-foreground: oklch(0.96 0.035 75);
+  --glass: oklch(0.33 0.045 250 / 82%);
+  /* Lo-fi dusk: a warm orange sunset glow melting into deep blue — soft,
+     layered radial light over a navy base, like a bedroom lamp at night. */
   --page-gradient:
-    radial-gradient(800px circle at 6% -6%, oklch(0.5 0.09 55 / 30%) 0%, transparent 50%),
-    radial-gradient(850px circle at 102% 4%, oklch(0.5 0.1 240 / 35%) 0%, transparent 50%),
-    linear-gradient(165deg, oklch(0.17 0.01 250) 0%, oklch(0.2 0.02 240) 100%);
-  --primary-gradient: linear-gradient(135deg, oklch(0.62 0.1 240), var(--brand-deep));
-  --secondary: oklch(0.245 0.003 90);
-  --secondary-foreground: oklch(0.94 0.002 90);
-  --muted: oklch(0.235 0.003 90);
-  --muted-foreground: oklch(0.70 0.003 90);
-  --accent: oklch(0.3 0.04 240);
-  --accent-foreground: oklch(0.95 0.01 235);
-  --destructive: oklch(0.58 0.17 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.98 0.002 90 / 14%);
-  --input: oklch(0.98 0.002 90 / 18%);
-  --ring: oklch(0.75 0.003 90);
+    radial-gradient(900px circle at 8% -8%, oklch(0.6 0.13 60 / 28%) 0%, transparent 52%),
+    radial-gradient(950px circle at 100% 6%, oklch(0.58 0.13 250 / 30%) 0%, transparent 52%),
+    radial-gradient(1000px circle at 46% 112%, oklch(0.44 0.1 250 / 26%) 0%, transparent 56%),
+    linear-gradient(165deg, oklch(0.3 0.05 255) 0%, oklch(0.24 0.045 245) 100%);
+  --primary-gradient: linear-gradient(135deg, oklch(0.69 0.11 240), var(--brand-deep));
+  --secondary: oklch(0.34 0.03 250);
+  --secondary-foreground: oklch(0.9 0.02 85);
+  --muted: oklch(0.34 0.03 250);
+  --muted-foreground: oklch(0.77 0.035 225);
+  --accent: oklch(0.38 0.06 240);
+  --accent-foreground: oklch(0.95 0.02 85);
+  --destructive: oklch(0.72 0.14 27);
+  --destructive-foreground: oklch(0.22 0.04 27);
+  --border: oklch(0.75 0.025 240 / 22%);
+  --input: oklch(0.75 0.025 240 / 28%);
+  --ring: oklch(0.8 0.105 225);
 }
 
 @layer base {
+  /* Sharp corners sitewide: nothing gets a rounded edge, anywhere. */
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
+  }
+
   * {
     border-color: var(--color-border);
+  }
+
+  /* Readability: lift the whole type scale by raising the root font size. */
+  html {
+    font-size: 17.5px;
   }
 
   body {
@@ -147,6 +162,25 @@
     opacity: 0.09;
   }
 
+  /* The school emblem as a large, softly blurred imprint behind the content. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("/asd-emblem-bg.png");
+    background-repeat: no-repeat;
+    background-position: center 42%;
+    background-size: min(72vmin, 620px) auto;
+    filter: blur(26px) saturate(1.05);
+    opacity: 0.14;
+  }
+
+  .dark body::after {
+    opacity: 0.11;
+  }
+
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     font-weight: 600;
@@ -161,16 +195,16 @@
 
 @utility eyebrow {
   font-family: var(--font-micro);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-muted-foreground);
+  color: var(--color-primary);
 }
 
 @utility micro {
   font-family: var(--font-micro);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   letter-spacing: 0.02em;
   color: var(--color-muted-foreground);
 }
@@ -196,7 +230,7 @@
   min-height: 320px;
   outline: none;
   font-family: var(--font-serif);
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.75;
 }
 .tiptap p { margin: 0 0 1em; }
@@ -231,7 +265,7 @@
 
 .prose-article {
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: 1.1875rem;
   line-height: 1.85;
   letter-spacing: 0.005em;
   color: var(--color-foreground);
@@ -262,5 +296,14 @@
 .prose-article a { color: var(--color-primary); text-decoration: underline; }
 .prose-article img { max-width: 100%; border-radius: var(--radius); margin: 1.2em 0; }
 
-/* Sharp edges everywhere */
-*, *::before, *::after { border-radius: 0 !important; }
+/* The PDF lightbox and its side panel form a single elevated reading surface. */
+.pdf-viewer { border-radius: 1rem; }
+.pdf-comments-panel {
+  border-radius: 0 1rem 1rem 0;
+}
+@media (max-width: 1023px) {
+  .pdf-comments-panel { border-radius: 0 1rem 1rem 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdf-comments-panel { transition: none !important; }
+}
